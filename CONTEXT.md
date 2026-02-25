@@ -1,6 +1,6 @@
 # NEURAL//LINK — Agent Context
 
-## Current Version: v0.2.0 — Global UI Utilities & Glitch System
+## Current Version: v0.3.0 — Hero Section & Home Page
 
 ## Completed Steps
 
@@ -21,7 +21,12 @@
 - Created src/lib/components/LoadingBar.svelte: animated percent fill with Unicode block chars (█/░), role=status aria-live=polite
 - Created src/lib/components/NeonButton.svelte: border-only glow button, primary (yellow) and danger (red) variants with hover pulse animation
 - Wired ScanlineTransition into +layout.svelte (fires on every navigation)
-- Updated +page.svelte to demo GlitchText, LoadingBar, and NeonButton components
+
+### v0.3.0 — Hero Section & Home Page
+- Created src/lib/components/HeroSection.svelte: full-viewport hero with character-scramble title animation (each char randomizes through !@#$%^&*░▒▓ for ~1.5s, staggered 50ms per char), identity-line typewriter (// IDENTITY CONFIRMED: SONGBIRD with blinking cursor), CRT flicker keyframe (brightness/contrast 0.97–1.03 at random intervals), neon text-shadow on title (#02D7F2) and identity line (#F2E900)
+- Created src/lib/components/CyclingSubtitle.svelte: cycles through three role strings (HOME AUTOMATION ENGINEER / SYSTEMS ARCHITECT / NETWORK OPERATOR) with per-char type (30ms) and erase (20ms) animation, 2s hold, blinking block cursor (█)
+- Updated src/routes/+page.svelte: HeroSection takes full first viewport; #projects anchor below with placeholder // PROJECTS LOADING...
+- Responsive title: clamp(3.75rem, 14vw, 9rem) — scales from text-6xl on mobile to text-9xl on desktop
 
 ## Tech Stack
 - SvelteKit with TypeScript
@@ -43,4 +48,6 @@
 - src/lib/components/ScanlineTransition.svelte — full-viewport neon sweep on navigation
 - src/lib/components/LoadingBar.svelte — animated ASCII-style loading bar
 - src/lib/components/NeonButton.svelte — border glow button (primary/danger)
+- src/lib/components/HeroSection.svelte — full-viewport hero (scramble title + identity typewriter + cycling subtitle + CRT flicker)
+- src/lib/components/CyclingSubtitle.svelte — type/erase cycling role display with blinking cursor
 
