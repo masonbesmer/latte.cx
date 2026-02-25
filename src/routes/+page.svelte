@@ -1,14 +1,46 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import HeroSection from '$lib/components/HeroSection.svelte';
+  import { activeSection } from '$lib/stores/scene';
+
+  let heroEl: HTMLElement;
+  let projectsEl: HTMLElement;
+
+  onMount(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          if (entry.target === heroEl) {
+            activeSection.set('hero');
+          } else if (entry.target === projectsEl) {
+            activeSection.set('projects');
+          }
+        }
+      },
+      { threshold: 0.3 },
+    );
+
+    observer.observe(heroEl);
+    observer.observe(projectsEl);
+
+    return () => observer.disconnect();
+  });
 </script>
 
-<HeroSection />
+<section bind:this={heroEl} id="hero">
+  <HeroSection />
+</section>
 
-<section id="projects" class="projects-placeholder">
+<section bind:this={projectsEl} id="projects" class="projects-placeholder">
   <p class="projects-label">// PROJECTS LOADING...</p>
 </section>
 
 <style>
+  #hero {
+    display: contents;
+  }
+
   .projects-placeholder {
     min-height: 50vh;
     display: flex;
