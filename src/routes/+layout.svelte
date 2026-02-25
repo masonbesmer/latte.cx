@@ -1,6 +1,7 @@
 <script>
   import '../lib/styles/tokens.css';
   import '../lib/styles/globals.css';
+  import ScanlineTransition from '../lib/components/ScanlineTransition.svelte';
 </script>
 
 <svelte:head>
@@ -8,6 +9,7 @@
 </svelte:head>
 
 <div class="page-container">
+  <ScanlineTransition />
   <slot />
 </div>
 
