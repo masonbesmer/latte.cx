@@ -2,11 +2,14 @@
   import '../lib/styles/tokens.css';
   import '../lib/styles/globals.css';
   import ScanlineTransition from '../lib/components/ScanlineTransition.svelte';
+  import BackgroundScene from '../lib/components/three/BackgroundScene.svelte';
 </script>
 
 <svelte:head>
   <title>NEURAL//LINK</title>
 </svelte:head>
+
+<BackgroundScene />
 
 <div class="page-container">
   <ScanlineTransition />
@@ -18,7 +21,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #0A0A0F;
+    background-color: transparent;
     color: #02D7F2;
     font-family: 'Share Tech Mono', monospace;
     min-height: 100vh;
