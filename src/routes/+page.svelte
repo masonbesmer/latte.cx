@@ -1,36 +1,27 @@
 <script lang="ts">
-  import GlitchText from '$lib/components/GlitchText.svelte';
-  import LoadingBar from '$lib/components/LoadingBar.svelte';
-  import NeonButton from '$lib/components/NeonButton.svelte';
+  import HeroSection from '$lib/components/HeroSection.svelte';
 </script>
 
-<section class="home">
-  <GlitchText text="// HOME: HERO + GALLERY" tag="h1" trigger="hover" />
-  <p>Placeholder — Hero and project gallery will be here.</p>
+<HeroSection />
 
-  <div class="demo-row">
-    <LoadingBar percent={72} label="LOADING SUBSYSTEM" duration={1500} />
-  </div>
-
-  <div class="demo-row">
-    <NeonButton label="PRIMARY ACTION" variant="primary" />
-    <NeonButton label="DANGER ACTION" variant="danger" />
-  </div>
+<section id="projects" class="projects-placeholder">
+  <p class="projects-label">// PROJECTS LOADING...</p>
 </section>
 
 <style>
-  .home {
-    padding: var(--space-8);
+  .projects-placeholder {
+    min-height: 50vh;
     display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid rgba(2, 215, 242, 0.15);
   }
 
-  .demo-row {
-    display: flex;
-    gap: var(--space-4);
-    flex-wrap: wrap;
-    align-items: center;
+  .projects-label {
+    font-family: 'Share Tech Mono', monospace;
+    color: rgba(2, 215, 242, 0.4);
+    font-size: 1rem;
+    letter-spacing: 0.1em;
   }
 </style>
 
