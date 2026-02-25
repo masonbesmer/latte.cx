@@ -2,6 +2,7 @@
   import { Canvas, T } from '@threlte/core';
   import { Grid, Float } from '@threlte/extras';
   import SceneCore from './SceneCore.svelte';
+  import ParticleField from './ParticleField.svelte';
 
   // City building data — deterministic layout for a cyberpunk skyline
   const buildings = [
@@ -104,6 +105,9 @@
 
     <!-- Scene core: bloom post-processing + mouse parallax -->
     <SceneCore />
+
+    <!-- Ambient particle field: upward ember drift + mouse burst + color-shifting -->
+    <ParticleField />
   </Canvas>
 </div>
 
