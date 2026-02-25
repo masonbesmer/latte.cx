@@ -22,5 +22,12 @@
 		"tailwindcss": "^4.2.1",
 		"typescript": "^5.9.3",
 		"vite": "^7.3.1"
+	},
+	"dependencies": {
+		"@threlte/core": "^8.4.0",
+		"@threlte/extras": "^9.8.1",
+		"@types/three": "^0.183.1",
+		"postprocessing": "^6.38.3",
+		"three": "^0.183.1"
 	}
 }
