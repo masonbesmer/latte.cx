@@ -1,6 +1,6 @@
 # NEURAL//LINK — Agent Context
 
-## Current Version: v0.7.0 — Writeups Page & Markdown Rendering
+## Current Version: v0.8.0 — Contact Terminal
 
 ## Completed Steps
 
@@ -136,6 +136,7 @@
 - src/lib/data/content.ts — markdown content loader: getProject(slug) + getAllProjects() via import.meta.glob
 - src/lib/actions/tilt.ts — Svelte action for 3D card tilt (mousemove/mouseleave, touch-disabled)
 - src/content/*.md — markdown writeup files with frontmatter (title/slug/tags/category/date/summary)
+- src/lib/components/ContactTerminal.svelte — CLI-styled contact form: sequential fields, validation, loading/success/error states
 
 ## Architecture Notes
 - Camera is created imperatively in SceneCore (not via T.PerspectiveCamera makeDefault) to avoid a Threlte v8 TypeScript issue where @types/three types isCamera as boolean instead of true literal
@@ -164,3 +165,23 @@
   - Responsive grid: 1 col mobile → 2 col md → 3 col lg, gap 1.5rem, max-width 1200px centered
   - glitch-flash overlay: fixed full-viewport div with 220ms step-animation (white/cyan/magenta noise pulses) shown on card click, then goto() navigates
   - IntersectionObserver still wired for hero/projects sections → activeSection store
+  - Added `// ESTABLISH UPLINK` footer CTA section with `[SEND TRANSMISSION]` link to /contact
+
+### v0.8.0 — Contact Terminal
+- Created src/lib/components/ContactTerminal.svelte:
+  - formState: 'idle' | 'submitting' | 'success' | 'error' with Svelte reactive state
+  - CLI prompt fields: `> IDENTIFY:` (name, min 2 chars), `> FREQ:` (email, regex validation), `> SUBJECT:` (min 3 chars), `> MESSAGE:` (textarea, min 10 chars)
+  - Sequential field reveal: each field slides in (ct-slide-in @keyframes) after Enter/blur on previous field; auto-focuses next field
+  - Inline validation errors displayed as `// ERR: ...` in #FF1111 with red input border on submit
+  - Loading state: `// UPLINK CONNECTING...` animated dots (toggle every 400ms) + LoadingBar (label "TRANSMITTING PAYLOAD", 2.5s)
+  - Success state: glitch-flash overlay (220ms) → `// TRANSMISSION RECEIVED / // NEURAL ACK CONFIRMED / // SONGBIRD WILL RESPOND VIA ENCRYPTED CHANNEL` with slide-in animation, `[NEW TRANSMISSION]` reset button
+  - Error state: `// UPLINK FAILED — SIGNAL LOST` in red with RETRY button
+  - Simulated submission: 2.6s setTimeout (real backend deferred)
+  - Full cleanup: clearInterval on dots/loading in resetForm()
+- Updated src/routes/contact/+page.svelte:
+  - Full viewport centered layout (min-h-screen, max-width 680px)
+  - GlitchText h1 trigger="always" reading "// SEND TRANSMISSION"
+  - UPLINK STATUS: READY with blinking dot indicator (600ms interval)
+  - ct-divider separator line in dim cyan
+  - ContactTerminal component in main
+  - ← BACK TO NET footer link to /#projects
