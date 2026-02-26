@@ -1,6 +1,6 @@
 # NEURAL//LINK — Agent Context
 
-## Current Version: v0.9.0 — Braindance Intro Sequence & Audio
+## Current Version: v1.0.0 — Docker, Polish, Performance & Final Integration
 
 ## Completed Steps
 
@@ -151,8 +151,10 @@
 - ProjectCard tilt action is disabled on touch devices (hover: none media query check)
 - Card click triggers a 220ms glitch-flash CSS animation overlay before goto() navigation (scanline fires again via afterNavigate in layout)
 - BraindanceIntro is conditionally rendered in +layout.svelte only when sessionStorage('braindance-seen') is not set; sets flag on completion/skip
+- BackgroundScene is lazy-loaded: sceneReady=false while intro plays, set true on onIntroComplete (or immediately when intro already seen); prevents GPU contention during intro
 - prefers-reduced-motion check in BraindanceIntro bypasses intro entirely and logs to console
 - Audio uses Web Audio API synthesis (no external files); AudioContext.resume() called on mount to satisfy browser autoplay policy; all audio gracefully skipped if muted store is true or AudioContext unavailable
+- Static adapter (adapter-static) used for deployment; all routes prerendered; SPA fallback (index.html) handles unknown slugs client-side via nginx try_files directive
 
 
 ### v0.6.0 — Projects Gallery
@@ -222,3 +224,16 @@
   - {#if showIntro} renders <BraindanceIntro onComplete={onIntroComplete} />
   - onIntroComplete sets showIntro=false (unmounts component)
   - Audio mute toggle button: fixed bottom-right (z-index: 100), 🔊/🔇 icon, aria-label updates on state, neon border style consistent with design system
+
+### v1.0.0 — Docker, Polish, Performance & Final Integration
+- Installed @sveltejs/adapter-static; updated svelte.config.js: static adapter (pages/assets→build, fallback→index.html), prerender.handleHttpError=warn
+- Added export const prerender = true + entries() generator to src/routes/projects/[slug]/+page.ts: dynamically builds slug list from getAllProjects() for static prerendering
+- Created nginx.conf: gzip (text/css/js/svg/fonts), SPA fallback (try_files $uri $uri/ /index.html), 1-year cache for hashed assets, no-cache for index.html, security headers (X-Frame-Options SAMEORIGIN, X-Content-Type-Options nosniff, Referrer-Policy, CSP)
+- Created Dockerfile: multi-stage build — Stage 1 (node:20-alpine) npm ci + npm run build; Stage 2 (nginx:alpine) copies nginx.conf + /app/build → /usr/share/nginx/html
+- Created docker-compose.yml: service songbird-portfolio, restart: unless-stopped, Traefik labels (host rule latte.cx, websecure entrypoint, letsencrypt certresolver), traefik-public external network
+- Created .dockerignore: excludes node_modules, .svelte-kit, build, .git, *.md (except src/content/*.md), .env files
+- Performance: SceneCore render task skips when document.hidden (tab not visible — saves GPU cycles)
+- Performance: BackgroundScene lazy-loaded in +layout.svelte — sceneReady flag starts false; set true only after braindance intro completes (or immediately if sessionStorage flag set); avoids GPU contention during intro sequence
+- WebGL context loss recovery in SceneCore: webglcontextlost event (preventDefault + dispose composer), webglcontextrestored event (re-init composer); listeners cleaned up in onDestroy
+- Cross-browser: Firefox backdrop-filter fallback in ProjectCard — @supports not (backdrop-filter) sets background rgba(10,10,15,0.92) for solid semi-transparent card
+- Accessibility: focus-visible neon outline rings added to: back-link buttons in writeup page, breadcrumb links, contact page back link, CTA button (+page.svelte), NeonButton, ProjectCard

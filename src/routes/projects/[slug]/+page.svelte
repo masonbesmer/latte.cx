@@ -145,6 +145,11 @@
     color: #25E1ED;
   }
 
+  .back-link:focus-visible {
+    outline: 1px solid #02D7F2;
+    outline-offset: 2px;
+  }
+
   /* ── Breadcrumb ── */
   .breadcrumb {
     display: flex;
@@ -165,6 +170,11 @@
 
   .crumb:hover {
     color: #25E1ED;
+  }
+
+  .crumb:focus-visible {
+    outline: 1px solid #02D7F2;
+    outline-offset: 2px;
   }
 
   .crumb--current {

@@ -78,12 +78,24 @@
     will-change: transform;
   }
 
+  /* Firefox fallback: backdrop-filter not supported — use more opaque background */
+  @supports not (backdrop-filter: blur(12px)) {
+    .project-card {
+      background: rgba(10, 10, 15, 0.92);
+    }
+  }
+
   .project-card.hovered {
     border-color: rgba(2, 215, 242, 0.7);
     box-shadow:
       0 0 20px rgba(2, 215, 242, 0.4),
       0 0 40px rgba(2, 215, 242, 0.15),
       inset 0 0 12px rgba(2, 215, 242, 0.1);
+  }
+
+  .project-card:focus-visible {
+    outline: 1px solid #02D7F2;
+    outline-offset: 3px;
   }
 
   /* Thumbnail */

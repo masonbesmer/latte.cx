@@ -151,4 +151,8 @@
     border-color: rgba(2, 215, 242, 0.5);
     box-shadow: 0 0 8px rgba(2, 215, 242, 0.2);
   }
-</style>
+
+  .back-link:focus-visible {
+    outline: 1px solid #02D7F2;
+    outline-offset: 2px;
+  }</style>
