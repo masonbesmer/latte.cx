@@ -78,6 +78,9 @@
 
   function onContextLost(e: Event) {
     e.preventDefault(); // Required to allow context restoration
+    // Dispose only the EffectComposer (holds GPU framebuffers) — renderer, scene,
+    // geometry and materials are retained so they can be re-used once the context
+    // is restored without a full scene rebuild.
     composer?.dispose();
     composer = null;
   }
