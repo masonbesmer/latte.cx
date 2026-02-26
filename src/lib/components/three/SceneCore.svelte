@@ -73,9 +73,32 @@
   window.addEventListener('mousemove', onMouseMove);
   window.addEventListener('deviceorientation', onDeviceOrientation);
 
+  // ── WebGL context loss / recovery ──────────────────────────────────────────
+  const canvas = renderer.domElement;
+
+  function onContextLost(e: Event) {
+    e.preventDefault(); // Required to allow context restoration
+    // Dispose only the EffectComposer (holds GPU framebuffers) — renderer, scene,
+    // geometry and materials are retained so they can be re-used once the context
+    // is restored without a full scene rebuild.
+    composer?.dispose();
+    composer = null;
+  }
+
+  function onContextRestored() {
+    // Re-init composer after context is restored
+    initComposer();
+  }
+
+  canvas.addEventListener('webglcontextlost', onContextLost);
+  canvas.addEventListener('webglcontextrestored', onContextRestored);
+
   // Render task runs in the render stage (after all main-stage updates)
   useTask(
     () => {
+      // Skip rendering when the tab is hidden — saves GPU cycles
+      if (typeof document !== 'undefined' && document.hidden) return;
+
       // Lazy init EffectComposer on first frame
       if (!composer) {
         initComposer();
@@ -97,6 +120,8 @@
   onDestroy(() => {
     window.removeEventListener('mousemove', onMouseMove);
     window.removeEventListener('deviceorientation', onDeviceOrientation);
+    canvas.removeEventListener('webglcontextlost', onContextLost);
+    canvas.removeEventListener('webglcontextrestored', onContextRestored);
     unsubSize();
     scene.remove(perspCam);
     autoRenderTask.start();

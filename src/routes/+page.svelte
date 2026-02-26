@@ -171,5 +171,9 @@
   .cta-btn:hover {
     box-shadow: 0 0 16px rgba(242, 233, 0, 0.6), 0 0 32px rgba(242, 233, 0, 0.3), inset 0 0 12px rgba(242, 233, 0, 0.1);
   }
-</style>
+
+  .cta-btn:focus-visible {
+    outline: 1px solid #F2E900;
+    outline-offset: 2px;
+  }</style>
 

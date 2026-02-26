@@ -8,16 +8,21 @@
   import { muted } from '../lib/stores/audio';
 
   let showIntro = false;
+  let sceneReady = false;
 
   onMount(() => {
     const seen = sessionStorage.getItem('braindance-seen');
     if (!seen) {
       showIntro = true;
+      // sceneReady set in onIntroComplete — avoids GPU contention during intro
+    } else {
+      sceneReady = true;
     }
   });
 
   function onIntroComplete() {
     showIntro = false;
+    sceneReady = true;
   }
 
   function toggleMute() {
@@ -29,7 +34,9 @@
   <title>NEURAL//LINK</title>
 </svelte:head>
 
-<BackgroundScene />
+{#if sceneReady}
+  <BackgroundScene />
+{/if}
 
 {#if showIntro}
   <BraindanceIntro onComplete={onIntroComplete} />

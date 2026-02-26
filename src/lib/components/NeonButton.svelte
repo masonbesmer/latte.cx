@@ -31,6 +31,11 @@
     cursor: not-allowed;
   }
 
+  .neon-btn:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 2px;
+  }
+
   /* Primary — Iconic Yellow */
   .neon-btn--primary {
     color: #F2E900;
