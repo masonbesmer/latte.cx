@@ -6,6 +6,7 @@
   export let onComplete: () => void = () => {};
 
   // ── State ──────────────────────────────────────────────────────────────────
+  let started = false;
   let phase: 1 | 2 | 3 = 1;
   let skipVisible = false;
   let done = false;
@@ -189,9 +190,17 @@
     });
   }
 
+  // ── Start (must be called from a user gesture for AudioContext policy) ──────
+  function handleStart() {
+    started = true;
+    audio.resume()
+      .then(() => startSequence())
+      .catch(() => startSequence()); // start sequence even if audio context fails to resume
+  }
+
   // ── Mount / Destroy ────────────────────────────────────────────────────────
   onMount(() => {
-    // Respect prefers-reduced-motion
+    // Respect prefers-reduced-motion — bypass without requiring a gesture
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reducedMotion) {
       console.log('// BRAINDANCE BYPASSED — REDUCED MOTION DETECTED');
@@ -200,10 +209,7 @@
       onComplete();
       return;
     }
-
-    audio.resume().then(() => {
-      startSequence();
-    });
+    // Sequence starts only after handleStart() to satisfy browser autoplay policy
   });
 
   onDestroy(() => {
@@ -222,6 +228,12 @@
   $: bar    = '█'.repeat(filled) + '░'.repeat(empty);
 </script>
 
+<svelte:window on:keydown={(e) => {
+  if (!done && !started && !['Tab', 'Escape', 'Shift', 'Control', 'Alt', 'Meta'].includes(e.key)) {
+    handleStart();
+  }
+}} />
+
 {#if !done}
   <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
   <div
@@ -235,36 +247,44 @@
     <!-- Scanline overlay -->
     <div class="bd-scanlines" aria-hidden="true"></div>
 
-    <!-- Phase 1: Noise canvas -->
-    {#if phase === 1}
-      <canvas bind:this={canvas} class="bd-canvas" aria-hidden="true"></canvas>
-    {/if}
-
-    <!-- Phase 2: Neural sync loading -->
-    {#if phase === 2}
-      <div class="bd-sync">
-        <div class="bd-bar-label">SYNCING SONGBIRD//NET</div>
-        <div class="bd-bar" role="status" aria-live="polite" aria-label="Neural sync: {barPercent}%">
-          [{bar}] {barPercent}%
-        </div>
-        <div class="bd-readouts" aria-live="polite">
-          {#each visibleReadouts as line}
-            <div class="bd-readout-line">{line}</div>
-          {/each}
-        </div>
-      </div>
-    {/if}
-
-    <!-- Skip button (visible after 2s) -->
-    {#if skipVisible && phase !== 3}
-      <button
-        class="bd-skip"
-        class:bd-skip-visible={skipVisible}
-        on:click={skip}
-        aria-label="Skip braindance intro"
-      >
-        [SKIP BRAINDANCE]
+    {#if !started}
+      <!-- Pre-start: require user gesture to satisfy browser autoplay policy -->
+      <button class="bd-enter" on:click={handleStart} aria-label="Begin braindance intro">
+        <span class="bd-enter-text" aria-hidden="true">// CLICK TO INITIALIZE BRAINDANCE</span>
+        <span class="bd-enter-sub" aria-hidden="true">PRESS ANY KEY OR CLICK TO CONTINUE</span>
       </button>
+    {:else}
+      <!-- Phase 1: Noise canvas -->
+      {#if phase === 1}
+        <canvas bind:this={canvas} class="bd-canvas" aria-hidden="true"></canvas>
+      {/if}
+
+      <!-- Phase 2: Neural sync loading -->
+      {#if phase === 2}
+        <div class="bd-sync">
+          <div class="bd-bar-label">SYNCING SONGBIRD//NET</div>
+          <div class="bd-bar" role="status" aria-live="polite" aria-label="Neural sync: {barPercent}%">
+            [{bar}] {barPercent}%
+          </div>
+          <div class="bd-readouts" aria-live="polite">
+            {#each visibleReadouts as line}
+              <div class="bd-readout-line">{line}</div>
+            {/each}
+          </div>
+        </div>
+      {/if}
+
+      <!-- Skip button (visible after 2s) -->
+      {#if skipVisible && phase !== 3}
+        <button
+          class="bd-skip"
+          class:bd-skip-visible={skipVisible}
+          on:click={skip}
+          aria-label="Skip braindance intro"
+        >
+          [SKIP BRAINDANCE]
+        </button>
+      {/if}
     {/if}
   </div>
 {/if}
@@ -400,5 +420,48 @@
   .bd-skip:focus-visible {
     outline: 1px solid #02D7F2;
     outline-offset: 2px;
+  }
+
+  /* ── Pre-start enter prompt ──────────────────────────────────────────── */
+  .bd-enter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 2;
+    background: transparent;
+    border: 1px solid rgba(2, 215, 242, 0.35);
+    padding: 2rem 3rem;
+    cursor: pointer;
+    animation: bd-enter-pulse 2s ease-in-out infinite;
+    color: inherit;
+  }
+
+  .bd-enter:hover,
+  .bd-enter:focus-visible {
+    border-color: #02D7F2;
+    box-shadow: 0 0 16px rgba(2, 215, 242, 0.3);
+    outline: none;
+  }
+
+  .bd-enter-text {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(1.1rem, 3.5vw, 1.75rem);
+    font-weight: 700;
+    color: #25E1ED;
+    letter-spacing: 0.15em;
+    text-shadow: 0 0 12px #25E1ED;
+  }
+
+  .bd-enter-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(0.65rem, 1.6vw, 0.8rem);
+    color: rgba(2, 215, 242, 0.55);
+    letter-spacing: 0.1em;
+  }
+
+  @keyframes bd-enter-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.6; }
   }
 </style>
