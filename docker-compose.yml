@@ -5,15 +5,3 @@ services:
       dockerfile: Dockerfile
     container_name: songbird-portfolio
     restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.songbird.rule=Host(`latte.cx`)"
-      - "traefik.http.routers.songbird.entrypoints=websecure"
-      - "traefik.http.routers.songbird.tls.certresolver=letsencrypt"
-      - "traefik.http.services.songbird.loadbalancer.server.port=80"
-    networks:
-      - traefik-public
-
-networks:
-  traefik-public:
-    external: true
