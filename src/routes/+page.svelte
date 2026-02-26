@@ -67,6 +67,14 @@
   </div>
 </section>
 
+<!-- Contact CTA footer -->
+<section class="contact-cta">
+  <div class="contact-cta-inner">
+    <p class="cta-label">// ESTABLISH UPLINK</p>
+    <a href="/contact" class="cta-btn">[SEND TRANSMISSION]</a>
+  </div>
+</section>
+
 <style>
   #hero {
     display: contents;
@@ -123,6 +131,45 @@
     .projects-grid {
       grid-template-columns: repeat(3, 1fr);
     }
+  }
+
+  /* Contact CTA */
+  .contact-cta {
+    border-top: 1px solid rgba(2, 215, 242, 0.15);
+    padding: 4rem 0 5rem;
+    text-align: center;
+  }
+
+  .contact-cta-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .cta-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.85rem;
+    color: rgba(2, 215, 242, 0.45);
+    letter-spacing: 0.1em;
+    margin: 0;
+  }
+
+  .cta-btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    color: #F2E900;
+    text-decoration: none;
+    border: 1px solid #F2E900;
+    padding: 0.6rem 1.75rem;
+    box-shadow: 0 0 8px rgba(242, 233, 0, 0.3), inset 0 0 8px rgba(242, 233, 0, 0.05);
+    transition: box-shadow 0.25s ease, color 0.25s ease;
+    display: inline-block;
+  }
+
+  .cta-btn:hover {
+    box-shadow: 0 0 16px rgba(242, 233, 0, 0.6), 0 0 32px rgba(242, 233, 0, 0.3), inset 0 0 12px rgba(242, 233, 0, 0.1);
   }
 </style>
 
