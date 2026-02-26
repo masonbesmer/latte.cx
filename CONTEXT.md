@@ -1,6 +1,6 @@
 # NEURAL//LINK — Agent Context
 
-## Current Version: v0.8.0 — Contact Terminal
+## Current Version: v0.9.0 — Braindance Intro Sequence & Audio
 
 ## Completed Steps
 
@@ -109,6 +109,7 @@
 - Three.js v0.183 for 3D rendering
 - EffectComposer + UnrealBloomPass for bloom post-processing
 - mdsvex v0.12.6 for markdown preprocessing
+- Audio synthesis via Web Audio API (no external audio files or libraries required)
 
 ## Design Tokens
 - Iconic Yellow: #F2E900
@@ -137,6 +138,9 @@
 - src/lib/actions/tilt.ts — Svelte action for 3D card tilt (mousemove/mouseleave, touch-disabled)
 - src/content/*.md — markdown writeup files with frontmatter (title/slug/tags/category/date/summary)
 - src/lib/components/ContactTerminal.svelte — CLI-styled contact form: sequential fields, validation, loading/success/error states
+- src/lib/components/BraindanceIntro.svelte — full-screen 3-phase intro sequence: static noise canvas (phase 1), neural sync loading bar with glitch stutters + text readouts (phase 2), white flash + tear-out dissolve (phase 3)
+- src/lib/audio/braindance.ts — Web Audio API synthesis: white-noise static (fade in/out), synth sting (sawtooth+square, frequency sweep), bass drop (sine + waveshaper distortion)
+- src/lib/stores/audio.ts — muted: Writable<boolean> for global audio toggle
 
 ## Architecture Notes
 - Camera is created imperatively in SceneCore (not via T.PerspectiveCamera makeDefault) to avoid a Threlte v8 TypeScript issue where @types/three types isCamera as boolean instead of true literal
@@ -146,6 +150,9 @@
 - activeSection store connects +page.svelte IntersectionObserver → ParticleField color lerp and ProjectCard section highlight
 - ProjectCard tilt action is disabled on touch devices (hover: none media query check)
 - Card click triggers a 220ms glitch-flash CSS animation overlay before goto() navigation (scanline fires again via afterNavigate in layout)
+- BraindanceIntro is conditionally rendered in +layout.svelte only when sessionStorage('braindance-seen') is not set; sets flag on completion/skip
+- prefers-reduced-motion check in BraindanceIntro bypasses intro entirely and logs to console
+- Audio uses Web Audio API synthesis (no external files); AudioContext.resume() called on mount to satisfy browser autoplay policy; all audio gracefully skipped if muted store is true or AudioContext unavailable
 
 
 ### v0.6.0 — Projects Gallery
@@ -185,3 +192,33 @@
   - ct-divider separator line in dim cyan
   - ContactTerminal component in main
   - ← BACK TO NET footer link to /#projects
+
+### v0.9.0 — Braindance Intro Sequence & Audio
+- Installed howler (v2.2.4) as specified by plan.md step 1; subsequently removed (unused — all audio synthesized via Web Audio API programmatic fallback)
+- Created src/lib/audio/braindance.ts:
+  - All sounds synthesized via Web Audio API — no external audio files required
+  - playStaticFadeIn(): looping white-noise buffer → bandpass filter (2kHz) → gain fade-in over 2s; stored as staticSource/staticGain for external control
+  - fadeOutStatic(): linear gain ramp to 0 over fadeDuration, stops source
+  - playSynthSting(): sawtooth+square oscillators with frequency sweep (220→880→440Hz) and exponential gain envelope
+  - playBassDrop(): sine oscillator with pitch drop (80→30Hz), WaveShaperNode distortion, sharp attack + decay envelope
+  - stopAll(): delegates to fadeOutStatic
+  - setMuted(val): updates _muted flag and live staticGain value
+  - resume(): async, wraps AudioContext.resume() in try/catch to handle autoplay policy gracefully
+  - All functions guard against null ctx (SSR / no audio support)
+- Created src/lib/stores/audio.ts: muted: Writable<boolean> — persists mute state across components
+- Created src/lib/components/BraindanceIntro.svelte:
+  - Full-screen fixed overlay (z-index: 9999, background: #000), aria role=dialog
+  - Phase 1 (0–2s): <canvas> renders random noise pixels via ImageData in requestAnimationFrame loop; playStaticFadeIn plays
+  - Skip button: fades in at 2s (opacity: 0 → 1 via CSS transition), positioned top-right
+  - Phase 2 (2–5s): canvas hidden, bd-sync block shown; custom loading bar animates 0→100% over 3s via requestAnimationFrame; STUTTERS=[0.35, 0.62, 0.78] array causes 3 backwards jumps of 5–10%; synth sting fires via setInterval watcher when barPercent ≥ 60; 4 readout lines appear sequentially via staggered setTimeout (650ms apart)
+  - Phase 3 (5–6s): white flash (100ms), bass drop, bd-tear-out @keyframes dissolve (clip-path splits into fragments), done=true after 700ms → onComplete() called
+  - Skip: clearTimers + cancelAnimationFrame + stopNoiseLoop + audio.stopAll, then triggers phase 3 directly
+  - prefers-reduced-motion check in onMount: bypasses intro entirely, sets sessionStorage flag, logs `// BRAINDANCE BYPASSED — REDUCED MOTION DETECTED`
+  - $: audio.setMuted($muted) reactive statement keeps audio module in sync with store
+  - onDestroy: clearTimers + cancelAnimationFrame barRaf + stopNoiseLoop for full cleanup
+- Updated src/routes/+layout.svelte:
+  - Imports BraindanceIntro and muted store
+  - onMount reads sessionStorage('braindance-seen'); if absent, sets showIntro=true
+  - {#if showIntro} renders <BraindanceIntro onComplete={onIntroComplete} />
+  - onIntroComplete sets showIntro=false (unmounts component)
+  - Audio mute toggle button: fixed bottom-right (z-index: 100), 🔊/🔇 icon, aria-label updates on state, neon border style consistent with design system
