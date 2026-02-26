@@ -1,6 +1,6 @@
 # NEURAL//LINK — Agent Context
 
-## Current Version: v0.6.0 — Projects Gallery
+## Current Version: v0.7.0 — Writeups Page & Markdown Rendering
 
 ## Completed Steps
 
@@ -61,6 +61,46 @@
 - Updated BackgroundScene.svelte: added <ParticleField /> as last child of Canvas
 - Updated src/routes/+page.svelte: added IntersectionObserver (threshold: 0.3) on #hero wrapper and #projects section; sets activeSection to 'hero' or 'projects' on intersection
 
+### v0.7.0 — Writeups Page & Markdown Rendering
+- Installed mdsvex (v0.12.6) as devDependency for SvelteKit-native markdown processing
+- Configured svelte.config.js: extensions ['.svelte', '.md'], mdsvex preprocessor with .md extension and highlight aliases (sh→bash, ts→typescript, js→javascript)
+- Created src/content/ directory with 3 sample writeup .md files:
+  - neural-home-hub.md — Home Assistant platform write-up (frontmatter: title/slug/tags/category/date/summary)
+  - proxmox-hypervisor-cluster.md — Proxmox HA cluster write-up
+  - darknet-infrastructure.md — Zero-trust network write-up
+- Created src/lib/data/content.ts:
+  - ContentFrontmatter / ContentModule interfaces
+  - import.meta.glob loads all /src/content/*.md files
+  - getProject(slug): returns { component, meta } or null (404)
+  - getAllProjects(): returns all frontmatter sorted by date descending
+- Created src/routes/projects/[slug]/+page.ts: PageLoad calls getProject(params.slug), throws error(404) if not found with message "// PROJECT NOT FOUND: SLUG"
+- Built src/routes/projects/[slug]/+page.svelte:
+  - Breadcrumb: "NIGHT CITY NET > SONGBIRD > PROJECTS > [PROJECT NAME]" — Share Tech Mono, links in cyan, current segment in #F2E900
+  - GlitchText h1 with trigger="always" for the project title
+  - Project meta row: date in dim cyan, tag badges in border-only monospace style
+  - Project summary in border-left styled paragraph
+  - Terminal wrapper: neon border (rgba 20% opacity), top bar reading "// OUTPUT" with decorative dots
+  - Line-by-line load-in animation: requestAnimationFrame → forEach child with 80+i*15ms setTimeout, opacity 0→1 + translateY 8→0 CSS transition
+  - Blinking | cursor (.stream-cursor, blink-cursor @keyframes) shown during animation, cursorDone=true after last line + 1s delay
+  - Empty content edge case: cursorDone set immediately when no children
+  - ← BACK TO NET buttons (top + bottom): monospace border button, goto('/#projects')
+  - All markdown elements styled in terminal aesthetic:
+    - h1: Rajdhani, #F2E900, yellow text-shadow glow
+    - h2: Rajdhani, #25E1ED, neon-cyan text-shadow, border-bottom
+    - h3: Rajdhani, #02D7F2
+    - h4: Share Tech Mono, uppercase, dim cyan
+    - p: rgba cyan 85% opacity
+    - a: #25E1ED, border-bottom, hover → #F2E900
+    - ul/ol: dim list markers
+    - blockquote: yellow left border, yellow-tinted background
+    - hr: dim cyan 1px border-top
+    - table: yellow th, cyan td, row hover subtle highlight
+    - img: neon border + box-shadow glow, max-width 100%
+    - pre: dark bg, neon border, ::before pseudo "// OUTPUT" top bar
+    - code: #F2E900 inline, yellow-tinted bg
+    - pre code: #25E1ED, no bg (overrides inline)
+    - Prism token classes: keyword=magenta, string=yellow, number=neon-cyan, function=cyan, comment=dim
+
 ## Tech Stack
 - SvelteKit with TypeScript
 - Tailwind CSS v4 (@tailwindcss/vite)
@@ -68,6 +108,7 @@
 - Threlte (@threlte/core v8, @threlte/extras v9) for Three.js integration
 - Three.js v0.183 for 3D rendering
 - EffectComposer + UnrealBloomPass for bloom post-processing
+- mdsvex v0.12.6 for markdown preprocessing
 
 ## Design Tokens
 - Iconic Yellow: #F2E900
@@ -92,7 +133,9 @@
 - src/lib/components/three/ParticleField.svelte — ambient particle system: upward drift, mouse burst, color-shift
 - src/lib/stores/scene.ts — activeSection store for cross-component 3D state
 - src/lib/data/projects.ts — project data model + 6 placeholder projects with categories/tags
+- src/lib/data/content.ts — markdown content loader: getProject(slug) + getAllProjects() via import.meta.glob
 - src/lib/actions/tilt.ts — Svelte action for 3D card tilt (mousemove/mouseleave, touch-disabled)
+- src/content/*.md — markdown writeup files with frontmatter (title/slug/tags/category/date/summary)
 
 ## Architecture Notes
 - Camera is created imperatively in SceneCore (not via T.PerspectiveCamera makeDefault) to avoid a Threlte v8 TypeScript issue where @types/three types isCamera as boolean instead of true literal
