@@ -44,7 +44,6 @@ export function playStaticFadeIn(fadeDuration: number = 2): void {
   const c = getCtx();
   if (!c) return;
 
-  // Build a 2-second white-noise buffer
   const bufferSize = c.sampleRate * 2;
   const buffer = c.createBuffer(1, bufferSize, c.sampleRate);
   const data = buffer.getChannelData(0);
@@ -52,7 +51,6 @@ export function playStaticFadeIn(fadeDuration: number = 2): void {
     data[i] = Math.random() * 2 - 1;
   }
 
-  // High-pass filter to keep it crunchy
   const filter = c.createBiquadFilter();
   filter.type = 'bandpass';
   filter.frequency.value = 2000;
