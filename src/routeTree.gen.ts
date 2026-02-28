@@ -9,12 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SynthwaveRouteRouteImport } from './routes/synthwave/route'
 import { Route as CyberpunkRouteRouteImport } from './routes/cyberpunk/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SynthwaveIndexRouteImport } from './routes/synthwave/index'
 import { Route as CyberpunkIndexRouteImport } from './routes/cyberpunk/index'
 import { Route as CyberpunkContactIndexRouteImport } from './routes/cyberpunk/contact/index'
 import { Route as CyberpunkProjectsSlugRouteImport } from './routes/cyberpunk/projects/$slug'
 
+const SynthwaveRouteRoute = SynthwaveRouteRouteImport.update({
+  id: '/synthwave',
+  path: '/synthwave',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CyberpunkRouteRoute = CyberpunkRouteRouteImport.update({
   id: '/cyberpunk',
   path: '/cyberpunk',
@@ -24,6 +31,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const SynthwaveIndexRoute = SynthwaveIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SynthwaveRouteRoute,
 } as any)
 const CyberpunkIndexRoute = CyberpunkIndexRouteImport.update({
   id: '/',
@@ -44,13 +56,16 @@ const CyberpunkProjectsSlugRoute = CyberpunkProjectsSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cyberpunk': typeof CyberpunkRouteRouteWithChildren
+  '/synthwave': typeof SynthwaveRouteRouteWithChildren
   '/cyberpunk/': typeof CyberpunkIndexRoute
+  '/synthwave/': typeof SynthwaveIndexRoute
   '/cyberpunk/projects/$slug': typeof CyberpunkProjectsSlugRoute
   '/cyberpunk/contact/': typeof CyberpunkContactIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cyberpunk': typeof CyberpunkIndexRoute
+  '/synthwave': typeof SynthwaveIndexRoute
   '/cyberpunk/projects/$slug': typeof CyberpunkProjectsSlugRoute
   '/cyberpunk/contact': typeof CyberpunkContactIndexRoute
 }
@@ -58,7 +73,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cyberpunk': typeof CyberpunkRouteRouteWithChildren
+  '/synthwave': typeof SynthwaveRouteRouteWithChildren
   '/cyberpunk/': typeof CyberpunkIndexRoute
+  '/synthwave/': typeof SynthwaveIndexRoute
   '/cyberpunk/projects/$slug': typeof CyberpunkProjectsSlugRoute
   '/cyberpunk/contact/': typeof CyberpunkContactIndexRoute
 }
@@ -67,16 +84,25 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/cyberpunk'
+    | '/synthwave'
     | '/cyberpunk/'
+    | '/synthwave/'
     | '/cyberpunk/projects/$slug'
     | '/cyberpunk/contact/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cyberpunk' | '/cyberpunk/projects/$slug' | '/cyberpunk/contact'
+  to:
+    | '/'
+    | '/cyberpunk'
+    | '/synthwave'
+    | '/cyberpunk/projects/$slug'
+    | '/cyberpunk/contact'
   id:
     | '__root__'
     | '/'
     | '/cyberpunk'
+    | '/synthwave'
     | '/cyberpunk/'
+    | '/synthwave/'
     | '/cyberpunk/projects/$slug'
     | '/cyberpunk/contact/'
   fileRoutesById: FileRoutesById
@@ -84,10 +110,18 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CyberpunkRouteRoute: typeof CyberpunkRouteRouteWithChildren
+  SynthwaveRouteRoute: typeof SynthwaveRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/synthwave': {
+      id: '/synthwave'
+      path: '/synthwave'
+      fullPath: '/synthwave'
+      preLoaderRoute: typeof SynthwaveRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cyberpunk': {
       id: '/cyberpunk'
       path: '/cyberpunk'
@@ -101,6 +135,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/synthwave/': {
+      id: '/synthwave/'
+      path: '/'
+      fullPath: '/synthwave/'
+      preLoaderRoute: typeof SynthwaveIndexRouteImport
+      parentRoute: typeof SynthwaveRouteRoute
     }
     '/cyberpunk/': {
       id: '/cyberpunk/'
@@ -142,9 +183,22 @@ const CyberpunkRouteRouteWithChildren = CyberpunkRouteRoute._addFileChildren(
   CyberpunkRouteRouteChildren,
 )
 
+interface SynthwaveRouteRouteChildren {
+  SynthwaveIndexRoute: typeof SynthwaveIndexRoute
+}
+
+const SynthwaveRouteRouteChildren: SynthwaveRouteRouteChildren = {
+  SynthwaveIndexRoute: SynthwaveIndexRoute,
+}
+
+const SynthwaveRouteRouteWithChildren = SynthwaveRouteRoute._addFileChildren(
+  SynthwaveRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CyberpunkRouteRoute: CyberpunkRouteRouteWithChildren,
+  SynthwaveRouteRoute: SynthwaveRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
