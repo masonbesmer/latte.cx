@@ -59,7 +59,8 @@ export function HeroSection() {
 
     function typeNext() {
       if (idx < IDENTITY_LINE.length) {
-        setIdentityText(prev => prev + IDENTITY_LINE[idx])
+        const currentIdx = idx
+        setIdentityText(prev => prev + IDENTITY_LINE[currentIdx])
         idx++
         const id = setTimeout(typeNext, 40)
         timeoutsRef.current.push(id)
