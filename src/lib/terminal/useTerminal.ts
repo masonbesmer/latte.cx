@@ -161,6 +161,7 @@ export function useTerminal() {
     if (e.key === 'ArrowUp') {
       e.preventDefault()
       setState(prev => {
+        if (prev.mode === 'editing') return prev
         if (prev.historyStack.length === 0) return prev
         const newIndex = Math.min(prev.historyIndex + 1, prev.historyStack.length - 1)
         return { ...prev, historyIndex: newIndex, inputBuffer: prev.historyStack[newIndex] }
@@ -168,6 +169,7 @@ export function useTerminal() {
     } else if (e.key === 'ArrowDown') {
       e.preventDefault()
       setState(prev => {
+        if (prev.mode === 'editing') return prev
         if (prev.historyIndex <= 0) return { ...prev, historyIndex: -1, inputBuffer: '' }
         const newIndex = prev.historyIndex - 1
         return { ...prev, historyIndex: newIndex, inputBuffer: prev.historyStack[newIndex] }
@@ -179,6 +181,7 @@ export function useTerminal() {
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       e.preventDefault()
       setState(prev => {
+        if (prev.mode === 'editing') return prev
         const parts = prev.inputBuffer.split(' ')
         const lastPart = parts[parts.length - 1]
 

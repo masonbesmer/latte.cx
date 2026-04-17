@@ -124,7 +124,7 @@ const commands: Record<string, Handler> = {
   edit: (args) => {
     if (!args[0]) return { lines: [err('edit: missing file argument')] }
     if (args[0] !== '/etc/.terminal.conf') {
-      return { lines: [err('edit: permission denied')] }
+      return { lines: [err('edit: only /etc/.terminal.conf is editable')] }
     }
     return { lines: [], edit: true }
   },

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { BootSequence } from './BootSequence'
 import { TerminalScreen } from './TerminalScreen'
 import { useTerminal } from '../../lib/terminal/useTerminal'
@@ -6,6 +6,7 @@ import '../../styles/terminal.css'
 
 export function TerminalPage() {
   const [booted, setBooted] = useState(false)
+  const handleBootComplete = useCallback(() => setBooted(true), [])
   const {
     outputLines, inputBuffer, mode,
     setInputBuffer, submit, handleKeyDown, handleTab,
@@ -27,7 +28,7 @@ export function TerminalPage() {
             onTab={handleTab}
           />
         ) : (
-          <BootSequence onComplete={() => setBooted(true)} />
+          <BootSequence onComplete={handleBootComplete} />
         )}
       </div>
     </div>
