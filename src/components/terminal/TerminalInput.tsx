@@ -20,6 +20,14 @@ export function TerminalInput({
     inputRef.current?.focus()
   }, [mode])
 
+  // Reset cursor to end when value changes (e.g., after history navigation)
+  useEffect(() => {
+    const input = inputRef.current
+    if (input && document.activeElement === input) {
+      input.setSelectionRange(value.length, value.length)
+    }
+  }, [value])
+
   const promptLabel = mode === 'editing' ? '> ' : 'C:\\> '
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
