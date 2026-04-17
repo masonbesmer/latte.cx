@@ -1,0 +1,206 @@
+@font-face {
+  font-family: 'FixedsysExcelsior';
+  src: url('/fonts/FixedsysExcelsior.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Tokens ──────────────────────────────────────────────────────── */
+:root {
+  --term-fg:  #39FF14;
+  --term-glow: #39FF14;
+  --term-bg:  #0a0a0a;
+  --term-font: 'FixedsysExcelsior', 'Courier New', monospace;
+  --term-size: 16px;
+  --term-lh: 1.5;
+}
+
+/* ── Root ────────────────────────────────────────────────────────── */
+.term-root {
+  width: 100vw;
+  height: 100vh;
+  background: var(--term-bg);
+  display: flex;
+  overflow: hidden;
+  font-family: var(--term-font);
+  font-size: var(--term-size);
+  color: var(--term-fg);
+}
+
+/* ── Screen wrapper (scanlines + vignette live here) ─────────────── */
+.term-screen-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: flicker 5s ease-in-out infinite;
+  will-change: opacity;
+}
+
+/* Scanlines overlay */
+.term-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.18) 3px,
+    rgba(0, 0, 0, 0.18) 4px
+  );
+}
+
+/* Vignette overlay */
+.term-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 11;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+}
+
+/* ── Animations ──────────────────────────────────────────────────── */
+@keyframes flicker {
+  0%   { opacity: 1.0; }
+  5%   { opacity: 0.97; }
+  10%  { opacity: 1.0; }
+  58%  { opacity: 1.0; }
+  63%  { opacity: 0.98; }
+  68%  { opacity: 1.0; }
+  100% { opacity: 1.0; }
+}
+
+@keyframes blink {
+  0%, 49% { visibility: visible; }
+  50%, 100% { visibility: hidden; }
+}
+
+/* ── Shared text glow ────────────────────────────────────────────── */
+.term-glow {
+  text-shadow: 0 0 6px var(--term-glow), 0 0 14px var(--term-glow);
+}
+
+/* ── Boot sequence ───────────────────────────────────────────────── */
+.term-boot {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 40px;
+  overflow: hidden;
+}
+
+/* ── Terminal screen (output + input) ────────────────────────────── */
+.term-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 40px 24px;
+  overflow: hidden;
+  outline: none;
+}
+
+.term-output {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--term-fg) var(--term-bg);
+  padding-bottom: 8px;
+}
+
+/* ── Lines ───────────────────────────────────────────────────────── */
+.term-line {
+  font-family: var(--term-font);
+  font-size: var(--term-size);
+  line-height: var(--term-lh);
+  color: var(--term-fg);
+  text-shadow: 0 0 6px var(--term-glow), 0 0 14px var(--term-glow);
+  white-space: pre-wrap;
+  word-break: break-all;
+  min-height: calc(var(--term-size) * var(--term-lh));
+}
+
+.term-line--error  { opacity: 0.6; }
+.term-line--prompt { opacity: 0.8; }
+.term-line--system { opacity: 0.95; }
+.term-line--output { opacity: 1.0; }
+
+/* ── Input row ───────────────────────────────────────────────────── */
+.term-input-row {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+.term-prompt-label {
+  font-family: var(--term-font);
+  font-size: var(--term-size);
+  line-height: var(--term-lh);
+  color: var(--term-fg);
+  text-shadow: 0 0 6px var(--term-glow), 0 0 14px var(--term-glow);
+  white-space: pre;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+/* Mirror + hidden input container */
+.term-input-field {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+/*
+ * The real <input> is invisible; it captures keyboard events.
+ * The mirror <span> shows the visible text with glow.
+ */
+.term-input-real {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: transparent;
+  caret-color: transparent;
+  font-family: var(--term-font);
+  font-size: var(--term-size);
+  padding: 0;
+  margin: 0;
+  z-index: 2;
+}
+
+.term-input-mirror {
+  font-family: var(--term-font);
+  font-size: var(--term-size);
+  line-height: var(--term-lh);
+  color: var(--term-fg);
+  text-shadow: 0 0 6px var(--term-glow), 0 0 14px var(--term-glow);
+  white-space: pre;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Cursor ──────────────────────────────────────────────────────── */
+.term-cursor {
+  font-family: var(--term-font);
+  font-size: var(--term-size);
+  color: var(--term-fg);
+  text-shadow: 0 0 6px var(--term-glow), 0 0 14px var(--term-glow);
+  animation: blink 0.75s step-end infinite;
+  flex-shrink: 0;
+  line-height: var(--term-lh);
+  user-select: none;
+}
