@@ -17,7 +17,7 @@ A full-viewport Fallout-style CRT terminal emulator at the site root. The entire
 ### Route Changes
 
 - `src/routes/index.tsx` → becomes the terminal page entry point
-- Current vinyl content moves to `src/routes/vinyl/index.tsx` + `src/routes/vinyl/route.tsx`
+- Current vinyl content moves to `src/routes/vinyl/index.tsx` (no layout wrapper needed)
 
 ### File Structure
 
@@ -26,8 +26,7 @@ src/
   routes/
     index.tsx                        ← TerminalPage mount
     vinyl/
-      route.tsx                      ← moved from root
-      index.tsx                      ← moved from root
+      index.tsx                      ← moved from root (no layout wrapper)
   components/terminal/
     TerminalPage.tsx                 ← full-viewport wrapper; manages boot→terminal transition
     BootSequence.tsx                 ← animated ROBCO boot screen
@@ -66,7 +65,7 @@ COPYRIGHT 2075-2077 ROBCO INDUSTRIES
 > LOADING VAULT-TEC KERNEL... OK
 > MOUNTING FILESYSTEM... OK
 > AUTHENTICATING USER...
-  WELCOME, VAULT DWELLER
+  WELCOME, VAULT_DWELLER_7
 -----------------------------------------
 TYPE 'help' FOR AVAILABLE COMMANDS.
 ```
@@ -75,7 +74,7 @@ TYPE 'help' FOR AVAILABLE COMMANDS.
 Renders the full output history as a scrollable list of lines. Each line is typed text with appropriate color (normal output, error, system message). Auto-scrolls to bottom on new output. Renders `<TerminalInput>` pinned at the bottom.
 
 ### `TerminalInput`
-Displays the current prompt (`C:\>`) and the live input buffer. Trailing `█` blinks via CSS keyframe. Captures `keydown` events: printable chars append to buffer, `Backspace` removes last char, `Enter` submits, `↑`/`↓` navigate command history, `Tab` completes file/dir names.
+Displays the current prompt (`C:\>`) and the live input buffer. Trailing `█` blinks via CSS keyframe. Captures `keydown` events: printable chars append to buffer, `Backspace` removes last char, `Enter` submits, `↑`/`↓` navigate command history, `Tab` completes file/dir names (longest common prefix; if multiple matches, lists all options on a new line).
 
 ---
 
@@ -88,7 +87,7 @@ State:
 - `inputBuffer: string` — current typed input
 - `cwd: string` — current working directory path
 - `historyStack: string[]` — submitted commands for ↑↓ recall
-- `historyIndex: number` — current position in history stack
+- `mode: 'command' | 'editing'` — `editing` mode is active during `edit` command; changes how `Enter` is handled
 
 On `Enter`: appends `[prompt] <input>` to output, calls `executeCommand(input, cwd, fs)`, appends result lines, resets buffer.
 
@@ -98,7 +97,7 @@ Command registry maps `string → (args: string[], ctx: CommandContext) => Line[
 
 | Command | Behavior |
 |---|---|
-| `ls [-la]` | List directory contents. `-a` reveals dotfiles (exposes `.terminal.conf`). |
+| `ls [-la]` | List directory contents. `-a` reveals dotfiles (exposes `.terminal.conf`). `-l` adds type indicator and byte count per entry. |
 | `cd <dir>` | Change directory. Supports `..`, relative and absolute paths. Error on missing dir. |
 | `cat <file>` | Print file contents. Error on missing file or directory target. |
 | `pwd` | Print current working directory. |
@@ -108,7 +107,7 @@ Command registry maps `string → (args: string[], ctx: CommandContext) => Line[
 | `whoami` | Returns `VAULT_DWELLER_7`. |
 | `date` | Returns vault-formatted date: `VAULT-TEC DATE: 2277.107 // SYSTEM TIME: <HH:MM>`. |
 | `neofetch` | ASCII art system info block in Fallout style (see below). |
-| `edit <file>` | Inline editor for `/etc/.terminal.conf` only. Prompts `COLOR_SCHEME=` and accepts a value. Applies immediately. |
+| `edit <file>` | Inline editor for `/etc/.terminal.conf` only. Switches `useTerminal` to `editing` mode: displays current config content, then prompts `NEW VALUE FOR COLOR_SCHEME:`. The next `Enter` reads the value, validates it against known schemes (`green`/`amber`/`blue`/`white`), writes it to the filesystem node, calls `theme.ts` to apply immediately. Unknown values print an error and stay in editing mode until a valid value or `Ctrl+C` cancels. |
 
 `neofetch` output (ASCII art pip-boy silhouette + system stats):
 ```
@@ -119,7 +118,7 @@ Command registry maps `string → (args: string[], ctx: CommandContext) => Line[
   ██║  ██║██║  ██║██████╔╝  UPTIME:   211 YEARS
   ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝   SHELL:    TERMLINK 1.0
                               MEMORY:   640K (SUFFICIENT)
-                              THEME:    green
+                              THEME:    <current color scheme>
 ```
 
 ---
