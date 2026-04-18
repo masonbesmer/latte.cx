@@ -31,7 +31,7 @@ function CyberpunkHome() {
     setGlitchFlash(true);
     setTimeout(() => {
       setGlitchFlash(false);
-      navigate({ to: "/cyberpunk/projects/$slug", params: { slug } });
+      void navigate({ to: "/cyberpunk/projects/$slug", params: { slug } });
     }, 220);
   }
 

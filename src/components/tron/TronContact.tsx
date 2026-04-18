@@ -143,7 +143,13 @@ export function TronContact() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="tron-terminal-form">
+    <form
+      onSubmit={(event) => {
+        void handleSubmit(event);
+      }}
+      noValidate
+      className="tron-terminal-form"
+    >
       <div className="tron-field">
         <label className="tron-field-label" htmlFor="tc-name">
           <span className="tron-prompt-gt">&gt;</span> IDENTIFY:

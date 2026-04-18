@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Service, getStatusColor, getStatusLabel } from "../../lib/vinyl-data";
+import type { Service} from "../../lib/vinyl-data";
+import { getStatusColor, getStatusLabel } from "../../lib/vinyl-data";
 import { VUMeter } from "./VUMeter";
 
 interface RecordCardProps {

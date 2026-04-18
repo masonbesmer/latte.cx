@@ -273,7 +273,9 @@ export function ContactTerminal() {
         />
       )}
       <form
-        onSubmit={handleSubmit}
+        onSubmit={(event) => {
+          void handleSubmit(event);
+        }}
         noValidate
         style={{
           display: "flex",

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface BootStep {
   text: string;
@@ -30,10 +30,12 @@ interface Props {
 export function BootSequence({ onComplete }: Props) {
   const [lines, setLines] = useState<string[]>([]);
   const [memFill, setMemFill] = useState(0);
+  const cancelledRef = useRef(false);
 
   useEffect(() => {
-    let cancelled = false;
+    cancelledRef.current = false;
     const timers: ReturnType<typeof setTimeout>[] = [];
+    const isCancelled = () => cancelledRef.current;
 
     const wait = (ms: number) =>
       new Promise<void>((res) => {
@@ -41,21 +43,21 @@ export function BootSequence({ onComplete }: Props) {
         timers.push(t);
       });
 
-    (async () => {
+    void (async () => {
       for (const step of BOOT_SCRIPT) {
-        if (cancelled) break;
+        if (isCancelled()) break;
         await wait(step.delay);
-        if (cancelled) break;
+        if (isCancelled()) break;
 
         setLines((prev) => [...prev, step.text]);
 
         if (step.isMemBar) {
           for (let i = 1; i <= MEM_TICKS; i++) {
             await wait(MEM_TICK_MS);
-            if (cancelled) break;
+            if (isCancelled()) break;
             setMemFill(i);
           }
-          if (!cancelled) {
+          if (!isCancelled()) {
             setLines((prev) => {
               const copy = [...prev];
               const idx = copy.lastIndexOf("> CHECKING MEMORY...");
@@ -68,14 +70,14 @@ export function BootSequence({ onComplete }: Props) {
         }
       }
 
-      if (!cancelled) {
+      if (!isCancelled()) {
         await wait(400);
-        if (!cancelled) onComplete();
+        if (!isCancelled()) onComplete();
       }
     })();
 
     return () => {
-      cancelled = true;
+      cancelledRef.current = true;
       timers.forEach(clearTimeout);
     };
   }, [onComplete]);

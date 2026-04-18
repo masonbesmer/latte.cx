@@ -27,12 +27,14 @@ export function BraindanceIntro({ onComplete, muted }: BraindanceIntroProps) {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const noiseRafRef = useRef(0);
-  const timersRef = useRef<
-    (ReturnType<typeof setTimeout> | ReturnType<typeof setInterval>)[]
-  >([]);
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const barRafRef = useRef(0);
   const synthStingFiredRef = useRef(false);
   const barPercentRef = useRef(0);
+  const onCompleteRef = useRef(onComplete);
+  const startSequenceRef = useRef<() => void>(() => {});
+
+  onCompleteRef.current = onComplete;
 
   function after(ms: number, fn: () => void) {
     const id = setTimeout(fn, ms);
@@ -42,8 +44,8 @@ export function BraindanceIntro({ onComplete, muted }: BraindanceIntroProps) {
 
   function clearTimers() {
     timersRef.current.forEach((id) => {
-      clearTimeout(id as ReturnType<typeof setTimeout>);
-      clearInterval(id as ReturnType<typeof setInterval>);
+      clearTimeout(id);
+      clearInterval(id);
     });
     timersRef.current = [];
   }
@@ -114,7 +116,7 @@ export function BraindanceIntro({ onComplete, muted }: BraindanceIntroProps) {
     after(700, () => {
       setDone(true);
       sessionStorage.setItem("braindance-seen", "true");
-      onComplete();
+      onCompleteRef.current();
     });
   }
 
@@ -142,6 +144,8 @@ export function BraindanceIntro({ onComplete, muted }: BraindanceIntroProps) {
     });
   }
 
+  startSequenceRef.current = startSequence;
+
   function skip() {
     clearTimers();
     cancelAnimationFrame(barRafRef.current);
@@ -154,7 +158,7 @@ export function BraindanceIntro({ onComplete, muted }: BraindanceIntroProps) {
     after(700, () => {
       setDone(true);
       sessionStorage.setItem("braindance-seen", "true");
-      onComplete();
+      onCompleteRef.current();
     });
   }
 
@@ -162,8 +166,8 @@ export function BraindanceIntro({ onComplete, muted }: BraindanceIntroProps) {
     setStarted(true);
     audio
       .resume()
-      .then(() => startSequence())
-      .catch(() => startSequence());
+      .then(() => startSequenceRef.current())
+      .catch(() => startSequenceRef.current());
   }, []);
 
   useEffect(() => {
@@ -173,7 +177,7 @@ export function BraindanceIntro({ onComplete, muted }: BraindanceIntroProps) {
     if (reducedMotion) {
       sessionStorage.setItem("braindance-seen", "true");
       setDone(true);
-      onComplete();
+      onCompleteRef.current();
       return;
     }
 

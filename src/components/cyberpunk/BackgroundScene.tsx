@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Grid, Float } from "@react-three/drei";
 import * as THREE from "three";
@@ -154,7 +154,7 @@ function ParticleField() {
     const posAttr = geo.attributes.position as THREE.BufferAttribute;
 
     for (let i = 0; i < COUNT; i++) {
-      let x = posAttr.getX(i);
+      const x = posAttr.getX(i);
       let y = posAttr.getY(i);
       const z = posAttr.getZ(i);
       y += driftY.current[i];
@@ -237,7 +237,7 @@ function SceneCore() {
       scene.remove(cam);
       composerRef.current?.dispose();
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- react-three-fiber keeps these values stable for mount-only composer setup.
 
   useEffect(() => {
     if (!camRef.current || !composerRef.current) return;

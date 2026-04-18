@@ -4,10 +4,13 @@ import ReactMarkdown from "react-markdown";
 import { GlitchText } from "../../../components/cyberpunk/GlitchText";
 import "../../../styles/glitch.css";
 
-const markdownModules = import.meta.glob("/content/*.md", {
-  query: "?raw",
-  import: "default",
-});
+const markdownModules: Partial<Record<string, () => Promise<string>>> = import.meta.glob(
+  "/content/*.md",
+  {
+    query: "?raw",
+    import: "default",
+  },
+);
 
 interface ProjectMeta {
   title: string;
@@ -18,9 +21,18 @@ interface ProjectMeta {
   summary: string;
 }
 
+const EMPTY_META: ProjectMeta = {
+  title: "",
+  slug: "",
+  tags: [],
+  category: "",
+  date: "",
+  summary: "",
+};
+
 function parseFrontmatter(raw: string): { meta: ProjectMeta; content: string } {
   const match = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-  if (!match) return { meta: {} as ProjectMeta, content: raw };
+  if (!match) return { meta: EMPTY_META, content: raw };
   const frontmatter = match[1];
   const content = match[2];
   const meta: Record<string, string | string[]> = {};
@@ -38,7 +50,17 @@ function parseFrontmatter(raw: string): { meta: ProjectMeta; content: string } {
       meta[key] = value.replace(/['"]/g, "");
     }
   }
-  return { meta: meta as unknown as ProjectMeta, content };
+  return {
+    meta: {
+      title: typeof meta.title === "string" ? meta.title : "",
+      slug: typeof meta.slug === "string" ? meta.slug : "",
+      tags: Array.isArray(meta.tags) ? meta.tags : [],
+      category: typeof meta.category === "string" ? meta.category : "",
+      date: typeof meta.date === "string" ? meta.date : "",
+      summary: typeof meta.summary === "string" ? meta.summary : "",
+    },
+    content,
+  };
 }
 
 export const Route = createFileRoute("/cyberpunk/projects/$slug")({
@@ -54,6 +76,10 @@ function ProjectPage() {
   const [cursorDone, setCursorDone] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  function navigateHome() {
+    void navigate({ to: "/cyberpunk" });
+  }
+
   useEffect(() => {
     const path = `/content/${slug}.md`;
     const loader = markdownModules[path];
@@ -61,15 +87,16 @@ function ProjectPage() {
       setNotFound(true);
       return;
     }
-    loader().then((raw) => {
-      const { meta: m, content: c } = parseFrontmatter(raw as string);
-      setMeta(m);
-      setContent(c);
+    setNotFound(false);
+    void loader().then((raw) => {
+      const { meta: parsedMeta, content: parsedContent } = parseFrontmatter(raw);
+      setMeta(parsedMeta);
+      setContent(parsedContent);
     });
   }, [slug]);
 
   useEffect(() => {
-    if (!content || !contentRef.current) return;
+    if (!contentRef.current) return;
     requestAnimationFrame(() => {
       if (!contentRef.current) return;
       const children = Array.from(contentRef.current.children) as HTMLElement[];
@@ -126,7 +153,7 @@ function ProjectPage() {
       <div className="back-link-row">
         <button
           className="back-link-btn"
-          onClick={() => navigate({ to: "/cyberpunk" })}
+          onClick={navigateHome}
         >
           ← BACK TO NET
         </button>
@@ -151,7 +178,7 @@ function ProjectPage() {
         <div className="project-meta-row">
           <span className="meta-date">// DATE: {meta.date}</span>
           <div className="meta-tags">
-            {(meta.tags || []).map((tag: string) => (
+            {meta.tags.map((tag) => (
               <span key={tag} className="tag-badge">
                 [{tag.toUpperCase()}]
               </span>
@@ -183,7 +210,7 @@ function ProjectPage() {
       <div className="bottom-nav">
         <button
           className="back-link-btn"
-          onClick={() => navigate({ to: "/cyberpunk" })}
+          onClick={navigateHome}
         >
           ← BACK TO NET
         </button>

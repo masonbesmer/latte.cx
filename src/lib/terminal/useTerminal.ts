@@ -43,15 +43,13 @@ export function useTerminal() {
 
   useLayoutEffect(() => {
     applyScheme(state.scheme);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state.scheme]);
 
   const setInputBuffer = useCallback((value: string) => {
     setState((prev) => ({ ...prev, inputBuffer: value }));
   }, []);
 
   const submit = useCallback((input: string) => {
-    let pendingScheme: ColorScheme | null = null;
-
     setState((prev) => {
       const promptLine = mkLine(
         prev.mode === "editing" ? `> ${input}` : `C:\\> ${input}`,
@@ -90,8 +88,11 @@ export function useTerminal() {
           };
         }
 
-        const newScheme = trimmed as ColorScheme;
-        pendingScheme = newScheme;
+        const newScheme = trimmed;
+        const confNode = getNode("/etc/.terminal.conf", fsRef.current);
+        if (confNode?.type === "file") {
+          confNode.content = updateConfigContent(confNode.content, newScheme);
+        }
 
         return {
           ...prev,
@@ -181,14 +182,6 @@ export function useTerminal() {
         cwd: result.newCwd ?? prev.cwd,
       };
     });
-
-    if (pendingScheme !== null) {
-      applyScheme(pendingScheme);
-      const confNode = getNode("/etc/.terminal.conf", fsRef.current);
-      if (confNode?.type === "file") {
-        confNode.content = updateConfigContent(confNode.content, pendingScheme);
-      }
-    }
   }, []);
 
   const handleKeyDown = useCallback(
@@ -258,12 +251,7 @@ export function useTerminal() {
       }
 
       // Multiple matches — show them
-      const promptLine = mkLine(
-        prev.mode === "editing"
-          ? `> ${prev.inputBuffer}`
-          : `C:\\> ${prev.inputBuffer}`,
-        "prompt",
-      );
+      const promptLine = mkLine(`C:\\> ${prev.inputBuffer}`, "prompt");
       const matchLine = mkLine(matches.join(" "), "output");
       return {
         ...prev,

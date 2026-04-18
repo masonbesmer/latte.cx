@@ -1,4 +1,4 @@
-import { CrateDivider as CrateDividerType } from "../../lib/vinyl-data";
+import type { CrateDivider as CrateDividerType } from "../../lib/vinyl-data";
 
 interface CrateDividerProps {
   divider: CrateDividerType;

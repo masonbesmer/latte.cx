@@ -16,7 +16,6 @@ function SceneInner() {
   const offsetRef = useRef(0);
   const gridRef = useRef<THREE.LineSegments | null>(null);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- gl/scene/size refs are stable on mount
   useEffect(() => {
     gl.setClearColor(GRID_BG, 1);
 
@@ -84,7 +83,7 @@ function SceneInner() {
       mat.dispose();
       composerRef.current?.dispose();
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- react-three-fiber keeps these values stable for mount-only composer setup.
 
   useEffect(() => {
     if (!camRef.current || !composerRef.current) return;

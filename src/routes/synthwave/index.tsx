@@ -107,8 +107,12 @@ function SynthwaveDashboard() {
   const handleClose = useCallback(() => setSelectedService(null), []);
 
   // Aggregate stats for gauges
-  const proxmox = services.find((s) => s.id === "proxmox")!;
-  const unifi = services.find((s) => s.id === "unifi")!;
+  const proxmox = services.find((s) => s.id === "proxmox");
+  const unifi = services.find((s) => s.id === "unifi");
+
+  if (!proxmox || !unifi) {
+    throw new Error("Required synthwave services are missing");
+  }
 
   return (
     <>

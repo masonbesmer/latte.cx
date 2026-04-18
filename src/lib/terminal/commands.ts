@@ -177,7 +177,9 @@ export function executeCommand(
   if (!trimmed) return { lines: [] };
 
   const [cmd, ...args] = trimmed.split(/\s+/);
-  const handler = commands[cmd];
+  const handler = Object.prototype.hasOwnProperty.call(commands, cmd)
+    ? commands[cmd]
+    : undefined;
 
   if (!handler) {
     return { lines: [mkLine(`'${cmd}': command not found`, "error")] };

@@ -18,6 +18,8 @@ export function HeroSection() {
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
+    const intervals = intervalsRef.current;
+    const timeouts = timeoutsRef.current;
     const chars = TITLE.split("");
     chars.forEach((targetChar, i) => {
       const startDelay = i * CHAR_STAGGER;
@@ -50,8 +52,8 @@ export function HeroSection() {
     });
 
     return () => {
-      intervalsRef.current.forEach(clearInterval);
-      timeoutsRef.current.forEach(clearTimeout);
+      intervals.forEach(clearInterval);
+      timeouts.forEach(clearTimeout);
     };
   }, []);
 

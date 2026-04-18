@@ -1,4 +1,5 @@
-import { Service, getStatusColor } from "../../lib/vinyl-data";
+import type { Service} from "../../lib/vinyl-data";
+import { getStatusColor } from "../../lib/vinyl-data";
 import { VUMeter } from "./VUMeter";
 
 interface TurntableProps {

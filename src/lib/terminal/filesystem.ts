@@ -267,8 +267,9 @@ export function getNode(path: string, fs: DirNode = filesystem): FSNode | null {
   let current: FSNode = fs;
   for (const part of parts) {
     if (current.type !== "dir") return null;
-    const child: FSNode | undefined = current.children[part];
-    if (!child) return null;
+    const children: Partial<Record<string, FSNode>> = current.children;
+    const child = children[part];
+    if (child === undefined) return null;
     current = child;
   }
   return current;

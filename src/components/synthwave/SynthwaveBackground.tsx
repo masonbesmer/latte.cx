@@ -20,7 +20,7 @@ function SynthwaveGrid() {
   const offsetRef = useRef(0);
 
   // Build geometry: horizontal lines + vertical lines
-  const { geometry, hPositions } = useMemo(() => {
+  const { geometry } = useMemo(() => {
     const totalLines = H_COUNT + V_COUNT + 1;
     const positions = new Float32Array(totalLines * 2 * 3);
     let idx = 0;
@@ -51,7 +51,7 @@ function SynthwaveGrid() {
       "position",
       new THREE.Float32BufferAttribute(positions, 3),
     );
-    return { geometry: geo, hPositions: positions };
+    return { geometry: geo };
   }, []);
 
   useFrame(() => {

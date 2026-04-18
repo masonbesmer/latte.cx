@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src", "tailwind.config.ts", "vite.config.ts"],
+  "exclude": ["build", "dist", "node_modules"]
+}

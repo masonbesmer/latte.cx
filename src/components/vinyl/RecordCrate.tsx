@@ -1,5 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from "react";
-import { crateItems, Service } from "../../lib/vinyl-data";
+import type { Service } from "../../lib/vinyl-data";
+import { crateItems } from "../../lib/vinyl-data";
 import { RecordCard } from "./RecordCard";
 import { CrateDividerCard } from "./CrateDividerCard";
 
@@ -15,7 +16,7 @@ export function RecordCrate({ onServiceSelect, selectedId }: RecordCrateProps) {
   const filteredItems = searchQuery.trim()
     ? crateItems.filter((item) => {
         if (item.type === "divider") return false;
-        const svc = item.data as Service;
+        const svc = item.data;
         const q = searchQuery.toLowerCase();
         return (
           svc.name.toLowerCase().includes(q) ||
@@ -142,7 +143,7 @@ export function RecordCrate({ onServiceSelect, selectedId }: RecordCrateProps) {
                 <CrateDividerCard key={item.data.id} divider={item.data} />
               );
             }
-            const svc = item.data as Service;
+            const svc = item.data;
             return (
               <div key={svc.id} style={{ scrollSnapAlign: "start" }}>
                 <RecordCard

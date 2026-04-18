@@ -44,7 +44,11 @@ export function NetworkGraph({ samples }: NetworkGraphProps) {
       data.forEach((v, i) => {
         const x = PAD + (i / (data.length - 1)) * (W - PAD * 2);
         const y = H - PAD - (v / maxVal) * (H - PAD * 2);
-        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        if (i === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
       });
       ctx.stroke();
 

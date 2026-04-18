@@ -21,6 +21,8 @@ export function TronHero() {
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
+    const intervals = intervalsRef.current;
+    const timeouts = timeoutsRef.current;
     const chars = TITLE.split("");
     const SCRAMBLE_DURATION = 1200;
     const CHAR_STAGGER = 60;
@@ -60,8 +62,8 @@ export function TronHero() {
     intervalsRef.current.push(cursorId);
 
     return () => {
-      intervalsRef.current.forEach(clearInterval);
-      timeoutsRef.current.forEach(clearTimeout);
+      intervals.forEach(clearInterval);
+      timeouts.forEach(clearTimeout);
     };
   }, []);
 
