@@ -4,13 +4,11 @@ import ReactMarkdown from "react-markdown";
 import { GlitchText } from "../../../components/cyberpunk/GlitchText";
 import "../../../styles/glitch.css";
 
-const markdownModules: Partial<Record<string, () => Promise<string>>> = import.meta.glob(
-  "/content/*.md",
-  {
+const markdownModules: Partial<Record<string, () => Promise<string>>> =
+  import.meta.glob("/content/*.md", {
     query: "?raw",
     import: "default",
-  },
-);
+  });
 
 interface ProjectMeta {
   title: string;
@@ -89,7 +87,8 @@ function ProjectPage() {
     }
     setNotFound(false);
     void loader().then((raw) => {
-      const { meta: parsedMeta, content: parsedContent } = parseFrontmatter(raw);
+      const { meta: parsedMeta, content: parsedContent } =
+        parseFrontmatter(raw);
       setMeta(parsedMeta);
       setContent(parsedContent);
     });
@@ -151,10 +150,7 @@ function ProjectPage() {
   return (
     <div className="writeup-page">
       <div className="back-link-row">
-        <button
-          className="back-link-btn"
-          onClick={navigateHome}
-        >
+        <button className="back-link-btn" onClick={navigateHome}>
           ← BACK TO NET
         </button>
       </div>
@@ -208,10 +204,7 @@ function ProjectPage() {
         </div>
       </div>
       <div className="bottom-nav">
-        <button
-          className="back-link-btn"
-          onClick={navigateHome}
-        >
+        <button className="back-link-btn" onClick={navigateHome}>
           ← BACK TO NET
         </button>
       </div>
