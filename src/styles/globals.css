@@ -7,37 +7,41 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0A0A0F;
+  background: #0a0a0f;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #02D7F2;
+  background: #02d7f2;
   border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #25E1ED;
+  background: #25e1ed;
 }
 
 /* Firefox scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #02D7F2 #0A0A0F;
+  scrollbar-color: #02d7f2 #0a0a0f;
 }
 
 /* CRT vignette overlay */
 body::after {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 9998;
-  background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.7) 100%);
+  background: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
 }
 
 /* Horizontal scan-line overlay */
 body::before {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;

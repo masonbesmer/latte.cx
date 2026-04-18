@@ -1,103 +1,120 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState, useEffect, useCallback, useRef } from 'react'
-import { StatCard } from '../../components/synthwave/StatCard'
-import { CPUBars } from '../../components/synthwave/CPUBars'
-import { NetworkGraph } from '../../components/synthwave/NetworkGraph'
-import { CircularGauge } from '../../components/synthwave/CircularGauge'
-import { TerminalLog } from '../../components/synthwave/TerminalLog'
-import { ServiceModal } from '../../components/synthwave/ServiceModal'
+import { createFileRoute } from "@tanstack/react-router";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { StatCard } from "../../components/synthwave/StatCard";
+import { CPUBars } from "../../components/synthwave/CPUBars";
+import { NetworkGraph } from "../../components/synthwave/NetworkGraph";
+import { CircularGauge } from "../../components/synthwave/CircularGauge";
+import { TerminalLog } from "../../components/synthwave/TerminalLog";
+import { ServiceModal } from "../../components/synthwave/ServiceModal";
 import {
   services,
   mockCpuCores,
   generateNetworkHistory,
   initialLogs,
   newLogTemplates,
-} from '../../lib/synthwave-data'
-import type { ServiceNode, NetworkSample, LogEntry } from '../../lib/synthwave-data'
+} from "../../lib/synthwave-data";
+import type {
+  ServiceNode,
+  NetworkSample,
+  LogEntry,
+} from "../../lib/synthwave-data";
 
-export const Route = createFileRoute('/synthwave/')({
+export const Route = createFileRoute("/synthwave/")({
   component: SynthwaveDashboard,
-})
+});
 
 function useClock() {
-  const [time, setTime] = useState(() => formatTime())
+  const [time, setTime] = useState(() => formatTime());
   useEffect(() => {
-    const id = setInterval(() => setTime(formatTime()), 1000)
-    return () => clearInterval(id)
-  }, [])
-  return time
+    const id = setInterval(() => setTime(formatTime()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return time;
 }
 
 function formatTime() {
-  return new Date().toLocaleTimeString('en-US', {
-    hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit',
-  })
+  return new Date().toLocaleTimeString("en-US", {
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
 }
 
 function SynthwaveDashboard() {
-  const time = useClock()
-  const [selectedService, setSelectedService] = useState<ServiceNode | null>(null)
-  const [cpuCores, setCpuCores] = useState(() => mockCpuCores(16))
+  const time = useClock();
+  const [selectedService, setSelectedService] = useState<ServiceNode | null>(
+    null,
+  );
+  const [cpuCores, setCpuCores] = useState(() => mockCpuCores(16));
   const [networkHistory, setNetworkHistory] = useState<NetworkSample[]>(() =>
     generateNetworkHistory(60),
-  )
-  const [logs, setLogs] = useState<LogEntry[]>(initialLogs)
-  const logIdRef = useRef(initialLogs.length + 1)
+  );
+  const [logs, setLogs] = useState<LogEntry[]>(initialLogs);
+  const logIdRef = useRef(initialLogs.length + 1);
 
   // Simulate live data updates
   useEffect(() => {
     const cpuInterval = setInterval(() => {
-      setCpuCores(prev =>
-        prev.map(v => {
-          const delta = (Math.random() - 0.48) * 12
-          return Math.max(0, Math.min(100, Math.round(v + delta)))
+      setCpuCores((prev) =>
+        prev.map((v) => {
+          const delta = (Math.random() - 0.48) * 12;
+          return Math.max(0, Math.min(100, Math.round(v + delta)));
         }),
-      )
-    }, 800)
+      );
+    }, 800);
 
     const netInterval = setInterval(() => {
-      setNetworkHistory(prev => {
-        const last = prev[prev.length - 1]
+      setNetworkHistory((prev) => {
+        const last = prev[prev.length - 1];
         const newSample: NetworkSample = {
           timestamp: Date.now(),
-          upload:   Math.max(5,  Math.min(120, last.upload   + (Math.random() - 0.5) * 20)),
-          download: Math.max(10, Math.min(350, last.download + (Math.random() - 0.5) * 40)),
-        }
-        return [...prev.slice(-59), newSample]
-      })
-    }, 2000)
+          upload: Math.max(
+            5,
+            Math.min(120, last.upload + (Math.random() - 0.5) * 20),
+          ),
+          download: Math.max(
+            10,
+            Math.min(350, last.download + (Math.random() - 0.5) * 40),
+          ),
+        };
+        return [...prev.slice(-59), newSample];
+      });
+    }, 2000);
 
     const logInterval = setInterval(() => {
-      const template = newLogTemplates[Math.floor(Math.random() * newLogTemplates.length)]
+      const template =
+        newLogTemplates[Math.floor(Math.random() * newLogTemplates.length)];
       const entry: LogEntry = {
         id: logIdRef.current++,
         timestamp: formatTime(),
         ...template,
-      }
-      setLogs(prev => [...prev.slice(-49), entry])
-    }, 3500)
+      };
+      setLogs((prev) => [...prev.slice(-49), entry]);
+    }, 3500);
 
     return () => {
-      clearInterval(cpuInterval)
-      clearInterval(netInterval)
-      clearInterval(logInterval)
-    }
-  }, [])
+      clearInterval(cpuInterval);
+      clearInterval(netInterval);
+      clearInterval(logInterval);
+    };
+  }, []);
 
-  const handleSelect = useCallback((s: ServiceNode) => setSelectedService(s), [])
-  const handleClose  = useCallback(() => setSelectedService(null), [])
+  const handleSelect = useCallback(
+    (s: ServiceNode) => setSelectedService(s),
+    [],
+  );
+  const handleClose = useCallback(() => setSelectedService(null), []);
 
   // Aggregate stats for gauges
-  const proxmox = services.find(s => s.id === 'proxmox')!
-  const unifi   = services.find(s => s.id === 'unifi')!
+  const proxmox = services.find((s) => s.id === "proxmox")!;
+  const unifi = services.find((s) => s.id === "unifi")!;
 
   return (
     <>
       {/* Top bar */}
       <header className="sw-topbar">
-        <div className="sw-topbar-title">
-          OUTRUN//GRID · HOMELAB
-        </div>
+        <div className="sw-topbar-title">OUTRUN//GRID · HOMELAB</div>
 
         <div className="sw-topbar-clock" aria-label="Current time">
           {time}
@@ -106,7 +123,7 @@ function SynthwaveDashboard() {
         <div className="sw-topbar-status">
           <div className="sw-health-dot" />
           <span>ALL SYSTEMS NOMINAL</span>
-          <span style={{ color: 'rgba(0,240,255,0.3)' }}>·</span>
+          <span style={{ color: "rgba(0,240,255,0.3)" }}>·</span>
           <span>↑ {proxmox.uptimeDays}D</span>
         </div>
       </header>
@@ -115,7 +132,7 @@ function SynthwaveDashboard() {
       <main className="sw-dashboard">
         {/* Stat Cards */}
         <section className="sw-stat-cards" aria-label="Service status cards">
-          {services.map(s => (
+          {services.map((s) => (
             <StatCard key={s.id} service={s} onSelect={handleSelect} />
           ))}
         </section>
@@ -163,5 +180,5 @@ function SynthwaveDashboard() {
         <ServiceModal service={selectedService} onClose={handleClose} />
       )}
     </>
-  )
+  );
 }

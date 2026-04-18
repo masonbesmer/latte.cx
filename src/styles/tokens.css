@@ -1,12 +1,12 @@
 :root {
   /* Palette */
-  --color-iconic-yellow: #F2E900;
-  --color-cyan: #02D7F2;
-  --color-electric-blue: #007AFF;
-  --color-hot-red: #FF1111;
-  --color-deep-black: #0A0A0F;
-  --color-neon-cyan: #25E1ED;
-  --color-hot-magenta: #ED1E79;
+  --color-iconic-yellow: #f2e900;
+  --color-cyan: #02d7f2;
+  --color-electric-blue: #007aff;
+  --color-hot-red: #ff1111;
+  --color-deep-black: #0a0a0f;
+  --color-neon-cyan: #25e1ed;
+  --color-hot-magenta: #ed1e79;
 
   /* Spacing */
   --space-1: 0.25rem;

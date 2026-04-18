@@ -1,35 +1,35 @@
 export interface FileNode {
-  type: 'file'
-  content: string
+  type: "file";
+  content: string;
 }
 
 export interface DirNode {
-  type: 'dir'
-  children: Record<string, FSNode>
+  type: "dir";
+  children: Record<string, FSNode>;
 }
 
-export type FSNode = FileNode | DirNode
+export type FSNode = FileNode | DirNode;
 
 export const filesystem: DirNode = {
-  type: 'dir',
+  type: "dir",
   children: {
     etc: {
-      type: 'dir',
+      type: "dir",
       children: {
-        '.terminal.conf': {
-          type: 'file',
-          content: 'COLOR_SCHEME=green\n',
+        ".terminal.conf": {
+          type: "file",
+          content: "COLOR_SCHEME=green\n",
         },
       },
     },
     home: {
-      type: 'dir',
+      type: "dir",
       children: {
         vault_dweller: {
-          type: 'dir',
+          type: "dir",
           children: {
-            'PERSONAL_LOG.txt': {
-              type: 'file',
+            "PERSONAL_LOG.txt": {
+              type: "file",
               content: `PERSONAL LOG — VAULT DWELLER 7
 ================================
 
@@ -58,10 +58,10 @@ There's nothing left to say.
 `,
             },
             notes: {
-              type: 'dir',
+              type: "dir",
               children: {
-                'TODO.txt': {
-                  type: 'file',
+                "TODO.txt": {
+                  type: "file",
                   content: `VAULT DWELLER TODO LIST
 =======================
 
@@ -87,13 +87,13 @@ There's nothing left to say.
       },
     },
     var: {
-      type: 'dir',
+      type: "dir",
       children: {
         logs: {
-          type: 'dir',
+          type: "dir",
           children: {
-            'system.log': {
-              type: 'file',
+            "system.log": {
+              type: "file",
               content: `[2077-10-23 07:12:01] SYSTEM BOOT OK
 [2077-10-23 07:12:03] VAULT DOOR SEALED — EXTERNAL DETONATION DETECTED
 [2077-10-23 07:12:05] CRYOSLEEP INITIATED FOR 1030 RESIDENTS
@@ -117,10 +117,10 @@ There's nothing left to say.
       },
     },
     vault: {
-      type: 'dir',
+      type: "dir",
       children: {
-        'MANIFEST.txt': {
-          type: 'file',
+        "MANIFEST.txt": {
+          type: "file",
           content: `VAULT-TEC CORPORATION
 VAULT 111 — FACILITY MANIFEST
 ==============================
@@ -147,10 +147,10 @@ SURFACE STATUS:  UNINHABITABLE (ESTIMATED)
 `,
         },
         residents: {
-          type: 'dir',
+          type: "dir",
           children: {
-            'roster.txt': {
-              type: 'file',
+            "roster.txt": {
+              type: "file",
               content: `VAULT 111 RESIDENT ROSTER
 ==========================
 [CLASSIFIED — OVERSEER ACCESS ONLY]
@@ -177,10 +177,10 @@ FOR FULL ROSTER, PRESENT OVERSEER KEYCARD AT TERMINAL B-3.
           },
         },
         records: {
-          type: 'dir',
+          type: "dir",
           children: {
-            'incident_47.txt': {
-              type: 'file',
+            "incident_47.txt": {
+              type: "file",
               content: `INCIDENT REPORT #47
 VAULT-TEC INTERNAL DOCUMENT
 ============================
@@ -214,8 +214,8 @@ REPORT STATUS:      SEALED
         },
       },
     },
-    'ROBCO_README.txt': {
-      type: 'file',
+    "ROBCO_README.txt": {
+      type: "file",
       content: `ROBCO INDUSTRIES TERMLINK v2.3
 ==============================
 
@@ -239,37 +239,37 @@ VAULT-TEC CORPORATION IS NOT RESPONSIBLE FOR:
 `,
     },
   },
-}
+};
 
 export function resolvePath(cwd: string, target: string): string {
-  if (target.startsWith('/')) return normalizePath(target)
-  const parts = cwd === '/' ? [] : cwd.split('/').filter(Boolean)
-  for (const segment of target.split('/').filter(Boolean)) {
-    if (segment === '..') parts.pop()
-    else if (segment !== '.') parts.push(segment)
+  if (target.startsWith("/")) return normalizePath(target);
+  const parts = cwd === "/" ? [] : cwd.split("/").filter(Boolean);
+  for (const segment of target.split("/").filter(Boolean)) {
+    if (segment === "..") parts.pop();
+    else if (segment !== ".") parts.push(segment);
   }
-  return '/' + parts.join('/')
+  return "/" + parts.join("/");
 }
 
 function normalizePath(p: string): string {
-  const parts = p.split('/').filter(Boolean)
-  const out: string[] = []
+  const parts = p.split("/").filter(Boolean);
+  const out: string[] = [];
   for (const part of parts) {
-    if (part === '..') out.pop()
-    else if (part !== '.') out.push(part)
+    if (part === "..") out.pop();
+    else if (part !== ".") out.push(part);
   }
-  return '/' + out.join('/')
+  return "/" + out.join("/");
 }
 
 export function getNode(path: string, fs: DirNode = filesystem): FSNode | null {
-  if (path === '/') return fs
-  const parts = path.split('/').filter(Boolean)
-  let current: FSNode = fs
+  if (path === "/") return fs;
+  const parts = path.split("/").filter(Boolean);
+  let current: FSNode = fs;
   for (const part of parts) {
-    if (current.type !== 'dir') return null
-    const child: FSNode | undefined = current.children[part]
-    if (!child) return null
-    current = child
+    if (current.type !== "dir") return null;
+    const child: FSNode | undefined = current.children[part];
+    if (!child) return null;
+    current = child;
   }
-  return current
+  return current;
 }

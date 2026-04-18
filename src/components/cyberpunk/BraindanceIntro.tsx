@@ -1,199 +1,213 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
-import * as audio from '../../lib/audio/braindance'
+import { useState, useEffect, useRef, useCallback } from "react";
+import * as audio from "../../lib/audio/braindance";
 
 interface BraindanceIntroProps {
-  onComplete: () => void
-  muted: boolean
+  onComplete: () => void;
+  muted: boolean;
 }
 
 const READOUTS = [
-  '// ESTABLISHING NEURAL HANDSHAKE...',
-  '// DECRYPTING IDENTITY MATRIX...',
-  '// LOADING SONGBIRD SUBSYSTEMS...',
-  '// LINK ESTABLISHED',
-]
-const BAR_DURATION = 3000
-const STUTTERS = [0.35, 0.62, 0.78]
-const TOTAL_BLOCKS = 10
+  "// ESTABLISHING NEURAL HANDSHAKE...",
+  "// DECRYPTING IDENTITY MATRIX...",
+  "// LOADING SONGBIRD SUBSYSTEMS...",
+  "// LINK ESTABLISHED",
+];
+const BAR_DURATION = 3000;
+const STUTTERS = [0.35, 0.62, 0.78];
+const TOTAL_BLOCKS = 10;
 
 export function BraindanceIntro({ onComplete, muted }: BraindanceIntroProps) {
-  const [started, setStarted] = useState(false)
-  const [phase, setPhase] = useState<1 | 2 | 3>(1)
-  const [skipVisible, setSkipVisible] = useState(false)
-  const [done, setDone] = useState(false)
-  const [barPercent, setBarPercent] = useState(0)
-  const [visibleReadouts, setVisibleReadouts] = useState<string[]>([])
-  const [flashWhite, setFlashWhite] = useState(false)
+  const [started, setStarted] = useState(false);
+  const [phase, setPhase] = useState<1 | 2 | 3>(1);
+  const [skipVisible, setSkipVisible] = useState(false);
+  const [done, setDone] = useState(false);
+  const [barPercent, setBarPercent] = useState(0);
+  const [visibleReadouts, setVisibleReadouts] = useState<string[]>([]);
+  const [flashWhite, setFlashWhite] = useState(false);
 
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const noiseRafRef = useRef(0)
-  const timersRef = useRef<(ReturnType<typeof setTimeout> | ReturnType<typeof setInterval>)[]>([])
-  const barRafRef = useRef(0)
-  const synthStingFiredRef = useRef(false)
-  const barPercentRef = useRef(0)
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const noiseRafRef = useRef(0);
+  const timersRef = useRef<
+    (ReturnType<typeof setTimeout> | ReturnType<typeof setInterval>)[]
+  >([]);
+  const barRafRef = useRef(0);
+  const synthStingFiredRef = useRef(false);
+  const barPercentRef = useRef(0);
 
   function after(ms: number, fn: () => void) {
-    const id = setTimeout(fn, ms)
-    timersRef.current.push(id)
-    return id
+    const id = setTimeout(fn, ms);
+    timersRef.current.push(id);
+    return id;
   }
 
   function clearTimers() {
-    timersRef.current.forEach(id => {
-      clearTimeout(id as ReturnType<typeof setTimeout>)
-      clearInterval(id as ReturnType<typeof setInterval>)
-    })
-    timersRef.current = []
+    timersRef.current.forEach((id) => {
+      clearTimeout(id as ReturnType<typeof setTimeout>);
+      clearInterval(id as ReturnType<typeof setInterval>);
+    });
+    timersRef.current = [];
   }
 
   function drawNoise(intensity: number) {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
-    const img = ctx.createImageData(canvas.width, canvas.height)
-    const data = img.data
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const img = ctx.createImageData(canvas.width, canvas.height);
+    const data = img.data;
     for (let i = 0; i < data.length; i += 4) {
-      const v = Math.random() * 255 * intensity
-      data[i] = v; data[i + 1] = v * 0.9; data[i + 2] = v * 1.1; data[i + 3] = 220
+      const v = Math.random() * 255 * intensity;
+      data[i] = v;
+      data[i + 1] = v * 0.9;
+      data[i + 2] = v * 1.1;
+      data[i + 3] = 220;
     }
-    ctx.putImageData(img, 0, 0)
+    ctx.putImageData(img, 0, 0);
   }
 
   function startNoiseLoop(intensity: number) {
     function loop() {
-      drawNoise(intensity)
-      noiseRafRef.current = requestAnimationFrame(loop)
+      drawNoise(intensity);
+      noiseRafRef.current = requestAnimationFrame(loop);
     }
-    loop()
+    loop();
   }
 
   function stopNoiseLoop() {
-    cancelAnimationFrame(noiseRafRef.current)
+    cancelAnimationFrame(noiseRafRef.current);
   }
 
   function startBarAnimation(onDone: () => void) {
-    const barStart = performance.now()
-    const stutterApplied = [false, false, false]
+    const barStart = performance.now();
+    const stutterApplied = [false, false, false];
 
     function tick(now: number) {
-      const elapsed = now - barStart
-      const t = Math.min(elapsed / BAR_DURATION, 1)
-      let pct = Math.round(t * 100)
+      const elapsed = now - barStart;
+      const t = Math.min(elapsed / BAR_DURATION, 1);
+      let pct = Math.round(t * 100);
       for (let i = 0; i < STUTTERS.length; i++) {
         if (!stutterApplied[i] && t >= STUTTERS[i]) {
-          stutterApplied[i] = true
-          pct = Math.max(0, pct - (5 + Math.floor(Math.random() * 6)))
+          stutterApplied[i] = true;
+          pct = Math.max(0, pct - (5 + Math.floor(Math.random() * 6)));
         }
       }
-      barPercentRef.current = pct
-      setBarPercent(pct)
+      barPercentRef.current = pct;
+      setBarPercent(pct);
       if (t < 1) {
-        barRafRef.current = requestAnimationFrame(tick)
+        barRafRef.current = requestAnimationFrame(tick);
       } else {
-        setBarPercent(100)
-        barPercentRef.current = 100
-        onDone()
+        setBarPercent(100);
+        barPercentRef.current = 100;
+        onDone();
       }
     }
-    barRafRef.current = requestAnimationFrame(tick)
+    barRafRef.current = requestAnimationFrame(tick);
   }
 
   function triggerResolve() {
-    setPhase(3)
-    setFlashWhite(true)
-    audio.playBassDrop()
-    after(100, () => setFlashWhite(false))
+    setPhase(3);
+    setFlashWhite(true);
+    audio.playBassDrop();
+    after(100, () => setFlashWhite(false));
     after(700, () => {
-      setDone(true)
-      sessionStorage.setItem('braindance-seen', 'true')
-      onComplete()
-    })
+      setDone(true);
+      sessionStorage.setItem("braindance-seen", "true");
+      onComplete();
+    });
   }
 
   function startSequence() {
-    setPhase(1)
-    startNoiseLoop(1)
-    audio.playStaticFadeIn(2)
-    after(2000, () => setSkipVisible(true))
+    setPhase(1);
+    startNoiseLoop(1);
+    audio.playStaticFadeIn(2);
+    after(2000, () => setSkipVisible(true));
     after(2000, () => {
-      setPhase(2)
-      stopNoiseLoop()
-      audio.fadeOutStatic(0.8)
+      setPhase(2);
+      stopNoiseLoop();
+      audio.fadeOutStatic(0.8);
       READOUTS.forEach((line, i) => {
-        after(i * 650, () => setVisibleReadouts(prev => [...prev, line]))
-      })
+        after(i * 650, () => setVisibleReadouts((prev) => [...prev, line]));
+      });
       const stingWatcher = setInterval(() => {
         if (!synthStingFiredRef.current && barPercentRef.current >= 60) {
-          synthStingFiredRef.current = true
-          audio.playSynthSting()
-          clearInterval(stingWatcher)
+          synthStingFiredRef.current = true;
+          audio.playSynthSting();
+          clearInterval(stingWatcher);
         }
-      }, 50)
-      timersRef.current.push(stingWatcher)
-      startBarAnimation(() => triggerResolve())
-    })
+      }, 50);
+      timersRef.current.push(stingWatcher);
+      startBarAnimation(() => triggerResolve());
+    });
   }
 
   function skip() {
-    clearTimers()
-    cancelAnimationFrame(barRafRef.current)
-    stopNoiseLoop()
-    audio.stopAll(0.2)
-    setPhase(3)
-    setFlashWhite(true)
-    audio.playBassDrop()
-    after(100, () => setFlashWhite(false))
+    clearTimers();
+    cancelAnimationFrame(barRafRef.current);
+    stopNoiseLoop();
+    audio.stopAll(0.2);
+    setPhase(3);
+    setFlashWhite(true);
+    audio.playBassDrop();
+    after(100, () => setFlashWhite(false));
     after(700, () => {
-      setDone(true)
-      sessionStorage.setItem('braindance-seen', 'true')
-      onComplete()
-    })
+      setDone(true);
+      sessionStorage.setItem("braindance-seen", "true");
+      onComplete();
+    });
   }
 
   const handleStart = useCallback(() => {
-    setStarted(true)
-    audio.resume().then(() => startSequence()).catch(() => startSequence())
-  }, [])
+    setStarted(true);
+    audio
+      .resume()
+      .then(() => startSequence())
+      .catch(() => startSequence());
+  }, []);
 
   useEffect(() => {
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     if (reducedMotion) {
-      sessionStorage.setItem('braindance-seen', 'true')
-      setDone(true)
-      onComplete()
-      return
+      sessionStorage.setItem("braindance-seen", "true");
+      setDone(true);
+      onComplete();
+      return;
     }
 
     function onKeyDown(e: KeyboardEvent) {
-      if (!done && !started && !['Tab', 'Escape', 'Shift', 'Control', 'Alt', 'Meta'].includes(e.key)) {
-        handleStart()
+      if (
+        !done &&
+        !started &&
+        !["Tab", "Escape", "Shift", "Control", "Alt", "Meta"].includes(e.key)
+      ) {
+        handleStart();
       }
     }
-    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener("keydown", onKeyDown);
     return () => {
-      window.removeEventListener('keydown', onKeyDown)
-      clearTimers()
-      cancelAnimationFrame(barRafRef.current)
-      stopNoiseLoop()
-    }
-  }, [done, started, handleStart])
+      window.removeEventListener("keydown", onKeyDown);
+      clearTimers();
+      cancelAnimationFrame(barRafRef.current);
+      stopNoiseLoop();
+    };
+  }, [done, started, handleStart]);
 
   useEffect(() => {
-    audio.setMuted(muted)
-  }, [muted])
+    audio.setMuted(muted);
+  }, [muted]);
 
-  if (done) return null
+  if (done) return null;
 
-  const filled = Math.round((barPercent / 100) * TOTAL_BLOCKS)
-  const empty = TOTAL_BLOCKS - filled
-  const bar = '█'.repeat(filled) + '░'.repeat(empty)
+  const filled = Math.round((barPercent / 100) * TOTAL_BLOCKS);
+  const empty = TOTAL_BLOCKS - filled;
+  const bar = "█".repeat(filled) + "░".repeat(empty);
 
   return (
     <div
-      className={`bd-overlay${phase === 3 && !flashWhite ? ' bd-dissolve' : ''}${flashWhite ? ' bd-flash' : ''}`}
+      className={`bd-overlay${phase === 3 && !flashWhite ? " bd-dissolve" : ""}${flashWhite ? " bd-flash" : ""}`}
       role="dialog"
       aria-label="Braindance intro sequence"
       aria-modal="true"
@@ -201,9 +215,17 @@ export function BraindanceIntro({ onComplete, muted }: BraindanceIntroProps) {
       <div className="bd-scanlines" aria-hidden="true" />
 
       {!started ? (
-        <button className="bd-enter" onClick={handleStart} aria-label="Begin braindance intro">
-          <span className="bd-enter-text" aria-hidden="true">// CLICK TO INITIALIZE BRAINDANCE</span>
-          <span className="bd-enter-sub" aria-hidden="true">PRESS ANY KEY OR CLICK TO CONTINUE</span>
+        <button
+          className="bd-enter"
+          onClick={handleStart}
+          aria-label="Begin braindance intro"
+        >
+          <span className="bd-enter-text" aria-hidden="true">
+            // CLICK TO INITIALIZE BRAINDANCE
+          </span>
+          <span className="bd-enter-sub" aria-hidden="true">
+            PRESS ANY KEY OR CLICK TO CONTINUE
+          </span>
         </button>
       ) : (
         <>
@@ -213,18 +235,29 @@ export function BraindanceIntro({ onComplete, muted }: BraindanceIntroProps) {
           {phase === 2 && (
             <div className="bd-sync">
               <div className="bd-bar-label">SYNCING SONGBIRD//NET</div>
-              <div className="bd-bar" role="status" aria-live="polite" aria-label={`Neural sync: ${barPercent}%`}>
+              <div
+                className="bd-bar"
+                role="status"
+                aria-live="polite"
+                aria-label={`Neural sync: ${barPercent}%`}
+              >
                 [{bar}] {barPercent}%
               </div>
               <div className="bd-readouts" aria-live="polite">
                 {visibleReadouts.map((line, i) => (
-                  <div key={i} className="bd-readout-line">{line}</div>
+                  <div key={i} className="bd-readout-line">
+                    {line}
+                  </div>
                 ))}
               </div>
             </div>
           )}
           {skipVisible && phase !== 3 && (
-            <button className="bd-skip bd-skip-visible" onClick={skip} aria-label="Skip braindance intro">
+            <button
+              className="bd-skip bd-skip-visible"
+              onClick={skip}
+              aria-label="Skip braindance intro"
+            >
               [SKIP BRAINDANCE]
             </button>
           )}
@@ -254,5 +287,5 @@ export function BraindanceIntro({ onComplete, muted }: BraindanceIntroProps) {
         @keyframes bd-enter-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
       `}</style>
     </div>
-  )
+  );
 }

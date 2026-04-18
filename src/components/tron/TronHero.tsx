@@ -1,86 +1,87 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from "react";
 
-const TITLE = 'USER_7742'
+const TITLE = "USER_7742";
 const SUBTITLE_LINES = [
-  'PROGRAM IDENTITY CONFIRMED',
-  'SYSTEM: ENCOM MAINFRAME',
-  'ACCESS LEVEL: ADMINISTRATOR',
-  'GRID COORDINATES: SECTOR 7',
-]
-const SCRAMBLE_CHARS = '!@#$%^&*█▓▒░'
+  "PROGRAM IDENTITY CONFIRMED",
+  "SYSTEM: ENCOM MAINFRAME",
+  "ACCESS LEVEL: ADMINISTRATOR",
+  "GRID COORDINATES: SECTOR 7",
+];
+const SCRAMBLE_CHARS = "!@#$%^&*█▓▒░";
 
 export function TronHero() {
   const [titleChars, setTitleChars] = useState<string[]>(
-    TITLE.split('').map(() => SCRAMBLE_CHARS[0]),
-  )
-  const [subtitleText, setSubtitleText] = useState('')
-  const [cursorVisible, setCursorVisible] = useState(true)
-  const [subtitleDone, setSubtitleDone] = useState(false)
-  const [scanReady, setScanReady] = useState(false)
-  const intervalsRef = useRef<ReturnType<typeof setInterval>[]>([])
-  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([])
+    TITLE.split("").map(() => SCRAMBLE_CHARS[0]),
+  );
+  const [subtitleText, setSubtitleText] = useState("");
+  const [cursorVisible, setCursorVisible] = useState(true);
+  const [subtitleDone, setSubtitleDone] = useState(false);
+  const [scanReady, setScanReady] = useState(false);
+  const intervalsRef = useRef<ReturnType<typeof setInterval>[]>([]);
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
-    const chars = TITLE.split('')
-    const SCRAMBLE_DURATION = 1200
-    const CHAR_STAGGER = 60
+    const chars = TITLE.split("");
+    const SCRAMBLE_DURATION = 1200;
+    const CHAR_STAGGER = 60;
 
     chars.forEach((targetChar, i) => {
-      const resolveAt = SCRAMBLE_DURATION + i * CHAR_STAGGER
-      let elapsed = 0
+      const resolveAt = SCRAMBLE_DURATION + i * CHAR_STAGGER;
+      let elapsed = 0;
       const interval = setInterval(() => {
-        elapsed += 50
+        elapsed += 50;
         if (elapsed >= resolveAt) {
-          setTitleChars(prev => {
-            const next = [...prev]
-            next[i] = targetChar
-            return next
-          })
-          clearInterval(interval)
+          setTitleChars((prev) => {
+            const next = [...prev];
+            next[i] = targetChar;
+            return next;
+          });
+          clearInterval(interval);
           if (i === chars.length - 1) {
             const id = setTimeout(() => {
-              setScanReady(true)
-              startSubtitle()
-            }, 200)
-            timeoutsRef.current.push(id)
+              setScanReady(true);
+              startSubtitle();
+            }, 200);
+            timeoutsRef.current.push(id);
           }
         } else {
-          setTitleChars(prev => {
-            const next = [...prev]
-            next[i] = SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]
-            return next
-          })
+          setTitleChars((prev) => {
+            const next = [...prev];
+            next[i] =
+              SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+            return next;
+          });
         }
-      }, 50)
-      intervalsRef.current.push(interval)
-    })
+      }, 50);
+      intervalsRef.current.push(interval);
+    });
 
-    const cursorId = setInterval(() => setCursorVisible(v => !v), 530)
-    intervalsRef.current.push(cursorId)
+    const cursorId = setInterval(() => setCursorVisible((v) => !v), 530);
+    intervalsRef.current.push(cursorId);
 
     return () => {
-      intervalsRef.current.forEach(clearInterval)
-      timeoutsRef.current.forEach(clearTimeout)
-    }
-  }, [])
+      intervalsRef.current.forEach(clearInterval);
+      timeoutsRef.current.forEach(clearTimeout);
+    };
+  }, []);
 
   function startSubtitle() {
-    let idx = 0
-    const line = SUBTITLE_LINES[0]
+    let idx = 0;
+    const line = SUBTITLE_LINES[0];
 
     function typeNext() {
       if (idx < line.length) {
-        setSubtitleText(prev => prev + line[idx])
-        idx++
-        const id = setTimeout(typeNext, 35)
-        timeoutsRef.current.push(id)
+        setSubtitleText((prev) => prev + line[idx]);
+        idx++;
+        const id = setTimeout(typeNext, 35);
+        timeoutsRef.current.push(id);
       } else {
-        setSubtitleDone(true)
+        setSubtitleDone(true);
       }
     }
 
-    const id = setTimeout(typeNext, 150)
-    timeoutsRef.current.push(id)
+    const id = setTimeout(typeNext, 150);
+    timeoutsRef.current.push(id);
   }
 
   return (
@@ -88,7 +89,9 @@ export function TronHero() {
       <div className="tron-hero-inner">
         {scanReady && <div className="tron-scan-bar" aria-hidden="true" />}
 
-        <div className="tron-hero-label">// PROGRAM INITIALIZATION SEQUENCE</div>
+        <div className="tron-hero-label">
+          // PROGRAM INITIALIZATION SEQUENCE
+        </div>
 
         <h1 className="tron-hero-title" aria-label={TITLE}>
           {titleChars.map((char, i) => (
@@ -224,5 +227,5 @@ export function TronHero() {
         }
       `}</style>
     </section>
-  )
+  );
 }

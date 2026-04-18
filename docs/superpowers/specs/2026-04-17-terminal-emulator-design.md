@@ -50,12 +50,15 @@ static/
 ## Components
 
 ### `TerminalPage`
+
 Top-level full-viewport container (`100vw × 100vh`, `overflow: hidden`). Renders `<BootSequence>` on first load; once boot completes, transitions to `<TerminalScreen>`. Applies the active color theme CSS custom properties to the root element.
 
 ### `BootSequence`
+
 Plays the ROBCO Industries boot animation. Lines are revealed sequentially with short per-character typewriter delays. Progress bar (`[████████████]`) animates character by character. Total duration ~3 seconds. Fires an `onComplete` callback when done, triggering the switch to the interactive terminal.
 
 Boot text:
+
 ```
 ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL
 COPYRIGHT 2075-2077 ROBCO INDUSTRIES
@@ -71,9 +74,11 @@ TYPE 'help' FOR AVAILABLE COMMANDS.
 ```
 
 ### `TerminalScreen`
+
 Renders the full output history as a scrollable list of lines. Each line is typed text with appropriate color (normal output, error, system message). Auto-scrolls to bottom on new output. Renders `<TerminalInput>` pinned at the bottom.
 
 ### `TerminalInput`
+
 Displays the current prompt (`C:\>`) and the live input buffer. Trailing `█` blinks via CSS keyframe. Captures `keydown` events: printable chars append to buffer, `Backspace` removes last char, `Enter` submits, `↑`/`↓` navigate command history, `Tab` completes file/dir names (longest common prefix; if multiple matches, lists all options on a new line).
 
 ---
@@ -83,6 +88,7 @@ Displays the current prompt (`C:\>`) and the live input buffer. Trailing `█` b
 ### `useTerminal` Hook
 
 State:
+
 - `outputLines: Line[]` — all rendered output (each line has text + type: `output | error | system | prompt`)
 - `inputBuffer: string` — current typed input
 - `cwd: string` — current working directory path
@@ -95,21 +101,22 @@ On `Enter`: appends `[prompt] <input>` to output, calls `executeCommand(input, c
 
 Command registry maps `string → (args: string[], ctx: CommandContext) => Line[]`.
 
-| Command | Behavior |
-|---|---|
-| `ls [-la]` | List directory contents. `-a` reveals dotfiles (exposes `.terminal.conf`). `-l` adds type indicator and byte count per entry. |
-| `cd <dir>` | Change directory. Supports `..`, relative and absolute paths. Error on missing dir. |
-| `cat <file>` | Print file contents. Error on missing file or directory target. |
-| `pwd` | Print current working directory. |
-| `echo <text>` | Print arguments back as output. |
-| `clear` | Clear all output history. |
-| `help` | Print list of all commands with one-line descriptions. |
-| `whoami` | Returns `VAULT_DWELLER_7`. |
-| `date` | Returns vault-formatted date: `VAULT-TEC DATE: 2277.107 // SYSTEM TIME: <HH:MM>`. |
-| `neofetch` | ASCII art system info block in Fallout style (see below). |
+| Command       | Behavior                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ls [-la]`    | List directory contents. `-a` reveals dotfiles (exposes `.terminal.conf`). `-l` adds type indicator and byte count per entry.                                                                                                                                                                                                                                                                                                                        |
+| `cd <dir>`    | Change directory. Supports `..`, relative and absolute paths. Error on missing dir.                                                                                                                                                                                                                                                                                                                                                                  |
+| `cat <file>`  | Print file contents. Error on missing file or directory target.                                                                                                                                                                                                                                                                                                                                                                                      |
+| `pwd`         | Print current working directory.                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `echo <text>` | Print arguments back as output.                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `clear`       | Clear all output history.                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `help`        | Print list of all commands with one-line descriptions.                                                                                                                                                                                                                                                                                                                                                                                               |
+| `whoami`      | Returns `VAULT_DWELLER_7`.                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `date`        | Returns vault-formatted date: `VAULT-TEC DATE: 2277.107 // SYSTEM TIME: <HH:MM>`.                                                                                                                                                                                                                                                                                                                                                                    |
+| `neofetch`    | ASCII art system info block in Fallout style (see below).                                                                                                                                                                                                                                                                                                                                                                                            |
 | `edit <file>` | Inline editor for `/etc/.terminal.conf` only. Switches `useTerminal` to `editing` mode: displays current config content, then prompts `NEW VALUE FOR COLOR_SCHEME:`. The next `Enter` reads the value, validates it against known schemes (`green`/`amber`/`blue`/`white`), writes it to the filesystem node, calls `theme.ts` to apply immediately. Unknown values print an error and stay in editing mode until a valid value or `Ctrl+C` cancels. |
 
 `neofetch` output (ASCII art pip-boy silhouette + system stats):
+
 ```
   ██████╗ ██████╗ ██████╗   VAULT-TEC TERMLINK v2.3
   ██╔══██╗██╔══██╗██╔══██╗  -------------------------
@@ -154,12 +161,12 @@ Represented as a typed JS object tree in `filesystem.ts`. Directories are `{ typ
 
 Defined via `/etc/.terminal.conf`. Discovered by running `ls -la /etc/`. Edited with `edit /etc/.terminal.conf`.
 
-| Scheme | `--term-fg` | `--term-glow` |
-|---|---|---|
-| `green` (default) | `#39FF14` | `#39FF14` |
-| `amber` | `#FFB000` | `#FF8C00` |
-| `blue` | `#00BFFF` | `#0080FF` |
-| `white` | `#E8E8E8` | `#FFFFFF` |
+| Scheme            | `--term-fg` | `--term-glow` |
+| ----------------- | ----------- | ------------- |
+| `green` (default) | `#39FF14`   | `#39FF14`     |
+| `amber`           | `#FFB000`   | `#FF8C00`     |
+| `blue`            | `#00BFFF`   | `#0080FF`     |
+| `white`           | `#E8E8E8`   | `#FFFFFF`     |
 
 On change: `theme.ts` updates CSS custom properties on `:root` and persists to `localStorage` key `terminal-color-scheme`. On page load, saved scheme is restored before boot sequence plays.
 
@@ -170,10 +177,12 @@ On change: `theme.ts` updates CSS custom properties on `:root` and persists to `
 **Font:** Fixedsys Excelsior (self-hosted `.woff2` in `/static/fonts/`), fallback `'Courier New', monospace`. All text uses this font — no exceptions.
 
 **Base colors:**
+
 - Background: `#0a0a0a`
 - Foreground/glow: via `--term-fg` / `--term-glow` CSS vars (default green)
 
 **Effects (all pure CSS):**
+
 - **Phosphor glow:** `text-shadow: 0 0 6px var(--term-glow), 0 0 14px var(--term-glow)`
 - **Scanlines:** `::before` pseudo on the screen container — `repeating-linear-gradient(transparent 0px, transparent 3px, rgba(0,0,0,0.18) 3px, rgba(0,0,0,0.18) 4px)`, pointer-events none
 - **Vignette:** `::after` pseudo — radial-gradient from transparent center to `rgba(0,0,0,0.6)` at corners

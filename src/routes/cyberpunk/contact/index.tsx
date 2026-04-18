@@ -1,19 +1,19 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState, useEffect } from 'react'
-import { GlitchText } from '../../../components/cyberpunk/GlitchText'
-import { ContactTerminal } from '../../../components/cyberpunk/ContactTerminal'
+import { createFileRoute } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
+import { GlitchText } from "../../../components/cyberpunk/GlitchText";
+import { ContactTerminal } from "../../../components/cyberpunk/ContactTerminal";
 
-export const Route = createFileRoute('/cyberpunk/contact/')({
+export const Route = createFileRoute("/cyberpunk/contact/")({
   component: ContactPage,
-})
+});
 
 function ContactPage() {
-  const [dotVisible, setDotVisible] = useState(true)
+  const [dotVisible, setDotVisible] = useState(true);
 
   useEffect(() => {
-    const id = setInterval(() => setDotVisible(v => !v), 600)
-    return () => clearInterval(id)
-  }, [])
+    const id = setInterval(() => setDotVisible((v) => !v), 600);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <div className="contact-page">
@@ -22,17 +22,26 @@ function ContactPage() {
           <GlitchText tag="h1" text="// SEND TRANSMISSION" trigger="always" />
           <p className="uplink-status">
             UPLINK STATUS: <span className="uplink-ready">READY</span>
-            <span className="uplink-dot" style={{ opacity: dotVisible ? 1 : 0 }} aria-hidden="true">●</span>
+            <span
+              className="uplink-dot"
+              style={{ opacity: dotVisible ? 1 : 0 }}
+              aria-hidden="true"
+            >
+              ●
+            </span>
           </p>
         </header>
         <div className="ct-divider" aria-hidden="true">
-          // ──────────────────────────────────────────────────────────────────────
+          //
+          ──────────────────────────────────────────────────────────────────────
         </div>
         <main className="contact-body">
           <ContactTerminal />
         </main>
         <footer className="contact-footer">
-          <a href="/cyberpunk" className="back-link">← BACK TO NET</a>
+          <a href="/cyberpunk" className="back-link">
+            ← BACK TO NET
+          </a>
         </footer>
       </div>
       <style>{`
@@ -50,5 +59,5 @@ function ContactPage() {
         .back-link:hover { color: #02D7F2; border-color: rgba(2,215,242,0.5); box-shadow: 0 0 8px rgba(2,215,242,0.2); }
       `}</style>
     </div>
-  )
+  );
 }

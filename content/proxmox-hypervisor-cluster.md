@@ -1,9 +1,9 @@
 ---
 title: PROXMOX HYPERVISOR CLUSTER
 slug: proxmox-hypervisor-cluster
-tags: ['proxmox', 'linux']
+tags: ["proxmox", "linux"]
 category: proxmox
-date: '2024-09-03'
+date: "2024-09-03"
 summary: High-availability 3-node Proxmox cluster with Ceph storage and automated backup pipelines.
 ---
 
@@ -74,9 +74,9 @@ HA groups are configured for all critical workloads. Fencing is handled by the c
 
 ## Performance Benchmarks
 
-| Test | Result |
-|------|--------|
-| Sequential read (Ceph) | 4.2 GB/s |
-| Sequential write (Ceph) | 3.8 GB/s |
-| 4K random IOPS | 180,000 |
+| Test                         | Result     |
+| ---------------------------- | ---------- |
+| Sequential read (Ceph)       | 4.2 GB/s   |
+| Sequential write (Ceph)      | 3.8 GB/s   |
+| 4K random IOPS               | 180,000    |
 | Live migration time (8GB VM) | 12 seconds |

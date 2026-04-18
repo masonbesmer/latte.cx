@@ -1,16 +1,21 @@
-import { useCallback, useState } from 'react'
-import { BootSequence } from './BootSequence'
-import { TerminalScreen } from './TerminalScreen'
-import { useTerminal } from '../../lib/terminal/useTerminal'
-import '../../styles/terminal.css'
+import { useCallback, useState } from "react";
+import { BootSequence } from "./BootSequence";
+import { TerminalScreen } from "./TerminalScreen";
+import { useTerminal } from "../../lib/terminal/useTerminal";
+import "../../styles/terminal.css";
 
 export function TerminalPage() {
-  const [booted, setBooted] = useState(false)
-  const handleBootComplete = useCallback(() => setBooted(true), [])
+  const [booted, setBooted] = useState(false);
+  const handleBootComplete = useCallback(() => setBooted(true), []);
   const {
-    outputLines, inputBuffer, mode,
-    setInputBuffer, submit, handleKeyDown, handleTab,
-  } = useTerminal()
+    outputLines,
+    inputBuffer,
+    mode,
+    setInputBuffer,
+    submit,
+    handleKeyDown,
+    handleTab,
+  } = useTerminal();
 
   return (
     <div className="term-root">
@@ -32,5 +37,5 @@ export function TerminalPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

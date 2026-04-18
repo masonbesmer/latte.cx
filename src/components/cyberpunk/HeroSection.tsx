@@ -1,77 +1,83 @@
-import { useState, useEffect, useRef } from 'react'
-import { CyclingSubtitle } from './CyclingSubtitle'
+import { useState, useEffect, useRef } from "react";
+import { CyclingSubtitle } from "./CyclingSubtitle";
 
-const TITLE = 'SONGBIRD'
-const IDENTITY_LINE = '// IDENTITY CONFIRMED: SONGBIRD'
-const SCRAMBLE_CHARS = '!@#$%^&*░▒▓'
-const SCRAMBLE_DURATION = 1500
-const CHAR_STAGGER = 50
+const TITLE = "SONGBIRD";
+const IDENTITY_LINE = "// IDENTITY CONFIRMED: SONGBIRD";
+const SCRAMBLE_CHARS = "!@#$%^&*░▒▓";
+const SCRAMBLE_DURATION = 1500;
+const CHAR_STAGGER = 50;
 
 export function HeroSection() {
-  const [titleChars, setTitleChars] = useState<string[]>(TITLE.split('').map(() => SCRAMBLE_CHARS[0]))
-  const [identityText, setIdentityText] = useState('')
-  const [identityCursorVisible, setIdentityCursorVisible] = useState(true)
-  const [identityDone, setIdentityDone] = useState(false)
-  const intervalsRef = useRef<ReturnType<typeof setInterval>[]>([])
-  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([])
+  const [titleChars, setTitleChars] = useState<string[]>(
+    TITLE.split("").map(() => SCRAMBLE_CHARS[0]),
+  );
+  const [identityText, setIdentityText] = useState("");
+  const [identityCursorVisible, setIdentityCursorVisible] = useState(true);
+  const [identityDone, setIdentityDone] = useState(false);
+  const intervalsRef = useRef<ReturnType<typeof setInterval>[]>([]);
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
-    const chars = TITLE.split('')
+    const chars = TITLE.split("");
     chars.forEach((targetChar, i) => {
-      const startDelay = i * CHAR_STAGGER
-      const resolveAt = SCRAMBLE_DURATION + startDelay
-      let elapsed = 0
+      const startDelay = i * CHAR_STAGGER;
+      const resolveAt = SCRAMBLE_DURATION + startDelay;
+      let elapsed = 0;
 
       const interval = setInterval(() => {
-        elapsed += 50
+        elapsed += 50;
         if (elapsed >= resolveAt) {
-          setTitleChars(prev => {
-            const next = [...prev]
-            next[i] = targetChar
-            return next
-          })
-          clearInterval(interval)
+          setTitleChars((prev) => {
+            const next = [...prev];
+            next[i] = targetChar;
+            return next;
+          });
+          clearInterval(interval);
           if (i === chars.length - 1) {
-            setTimeout(() => startIdentityLine(), 100)
+            setTimeout(() => startIdentityLine(), 100);
           }
         } else {
-          setTitleChars(prev => {
-            const next = [...prev]
-            next[i] = SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]
-            return next
-          })
+          setTitleChars((prev) => {
+            const next = [...prev];
+            next[i] =
+              SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+            return next;
+          });
         }
-      }, 50)
+      }, 50);
 
-      intervalsRef.current.push(interval)
-    })
+      intervalsRef.current.push(interval);
+    });
 
     return () => {
-      intervalsRef.current.forEach(clearInterval)
-      timeoutsRef.current.forEach(clearTimeout)
-    }
-  }, [])
+      intervalsRef.current.forEach(clearInterval);
+      timeoutsRef.current.forEach(clearTimeout);
+    };
+  }, []);
 
   function startIdentityLine() {
-    let idx = 0
-    const cursorId = setInterval(() => setIdentityCursorVisible(v => !v), 500)
-    intervalsRef.current.push(cursorId)
+    let idx = 0;
+    const cursorId = setInterval(
+      () => setIdentityCursorVisible((v) => !v),
+      500,
+    );
+    intervalsRef.current.push(cursorId);
 
     function typeNext() {
       if (idx < IDENTITY_LINE.length) {
-        const currentIdx = idx
-        setIdentityText(prev => prev + IDENTITY_LINE[currentIdx])
-        idx++
-        const id = setTimeout(typeNext, 40)
-        timeoutsRef.current.push(id)
+        const currentIdx = idx;
+        setIdentityText((prev) => prev + IDENTITY_LINE[currentIdx]);
+        idx++;
+        const id = setTimeout(typeNext, 40);
+        timeoutsRef.current.push(id);
       } else {
-        setIdentityDone(true)
-        clearInterval(cursorId)
+        setIdentityDone(true);
+        clearInterval(cursorId);
       }
     }
 
-    const id = setTimeout(typeNext, 200)
-    timeoutsRef.current.push(id)
+    const id = setTimeout(typeNext, 200);
+    timeoutsRef.current.push(id);
   }
 
   return (
@@ -79,12 +85,22 @@ export function HeroSection() {
       <div className="hero-inner">
         <h1 className="hero-title" aria-label={TITLE}>
           {titleChars.map((char, i) => (
-            <span key={i} className="title-char">{char}</span>
+            <span key={i} className="title-char">
+              {char}
+            </span>
           ))}
         </h1>
         <p className="identity-line" aria-label={IDENTITY_LINE} aria-live="off">
           {identityText}
-          <span style={{ opacity: identityCursorVisible && !identityDone ? 1 : 0, transition: 'opacity 0.05s', color: '#F2E900' }}>|</span>
+          <span
+            style={{
+              opacity: identityCursorVisible && !identityDone ? 1 : 0,
+              transition: "opacity 0.05s",
+              color: "#F2E900",
+            }}
+          >
+            |
+          </span>
         </p>
         <div className="subtitle-wrap">
           <CyclingSubtitle />
@@ -100,5 +116,5 @@ export function HeroSection() {
         .subtitle-wrap { margin-top: 0.5rem; }
       `}</style>
     </section>
-  )
+  );
 }

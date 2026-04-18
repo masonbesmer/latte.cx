@@ -1,19 +1,19 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useRef, useState, useEffect } from 'react'
-import { HeroSection } from '../../components/cyberpunk/HeroSection'
-import { GlitchText } from '../../components/cyberpunk/GlitchText'
-import { ProjectCard } from '../../components/cyberpunk/ProjectCard'
-import { projects } from '../../lib/projects'
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useRef, useState, useEffect } from "react";
+import { HeroSection } from "../../components/cyberpunk/HeroSection";
+import { GlitchText } from "../../components/cyberpunk/GlitchText";
+import { ProjectCard } from "../../components/cyberpunk/ProjectCard";
+import { projects } from "../../lib/projects";
 
-export const Route = createFileRoute('/cyberpunk/')({
+export const Route = createFileRoute("/cyberpunk/")({
   component: CyberpunkHome,
-})
+});
 
 function CyberpunkHome() {
-  const navigate = useNavigate()
-  const heroRef = useRef<HTMLElement>(null)
-  const projectsRef = useRef<HTMLElement>(null)
-  const [glitchFlash, setGlitchFlash] = useState(false)
+  const navigate = useNavigate();
+  const heroRef = useRef<HTMLElement>(null);
+  const projectsRef = useRef<HTMLElement>(null);
+  const [glitchFlash, setGlitchFlash] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -21,18 +21,18 @@ function CyberpunkHome() {
         // section visibility tracking (no-op for now without a store)
       },
       { threshold: 0.3 },
-    )
-    if (heroRef.current) observer.observe(heroRef.current)
-    if (projectsRef.current) observer.observe(projectsRef.current)
-    return () => observer.disconnect()
-  }, [])
+    );
+    if (heroRef.current) observer.observe(heroRef.current);
+    if (projectsRef.current) observer.observe(projectsRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   function handleCardClick(slug: string) {
-    setGlitchFlash(true)
+    setGlitchFlash(true);
     setTimeout(() => {
-      setGlitchFlash(false)
-      navigate({ to: '/cyberpunk/projects/$slug', params: { slug } })
-    }, 220)
+      setGlitchFlash(false);
+      navigate({ to: "/cyberpunk/projects/$slug", params: { slug } });
+    }, 220);
   }
 
   return (
@@ -60,7 +60,9 @@ function CyberpunkHome() {
       <section className="contact-cta">
         <div className="contact-cta-inner">
           <p className="cta-label">// ESTABLISH UPLINK</p>
-          <a href="/cyberpunk/contact" className="cta-btn">[SEND TRANSMISSION]</a>
+          <a href="/cyberpunk/contact" className="cta-btn">
+            [SEND TRANSMISSION]
+          </a>
         </div>
       </section>
       <style>{`
@@ -89,5 +91,5 @@ function CyberpunkHome() {
         .cta-btn:hover { box-shadow: 0 0 16px rgba(242,233,0,0.6), 0 0 32px rgba(242,233,0,0.3), inset 0 0 12px rgba(242,233,0,0.1); }
       `}</style>
     </>
-  )
+  );
 }

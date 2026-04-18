@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'FixedsysExcelsior';
-  src: url('/fonts/FixedsysExcelsior.woff2') format('woff2');
+  font-family: "FixedsysExcelsior";
+  src: url("/fonts/FixedsysExcelsior.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -8,10 +8,10 @@
 
 /* ── Tokens ──────────────────────────────────────────────────────── */
 :root {
-  --term-fg:  #39FF14;
-  --term-glow: #39FF14;
-  --term-bg:  #0a0a0a;
-  --term-font: 'FixedsysExcelsior', 'Courier New', monospace;
+  --term-fg: #39ff14;
+  --term-glow: #39ff14;
+  --term-bg: #0a0a0a;
+  --term-font: "FixedsysExcelsior", "Courier New", monospace;
   --term-size: 16px;
   --term-lh: 1.5;
 }
@@ -69,23 +69,45 @@
 
 /* ── Animations ──────────────────────────────────────────────────── */
 @keyframes flicker {
-  0%   { opacity: 1.0; }
-  5%   { opacity: 0.97; }
-  10%  { opacity: 1.0; }
-  58%  { opacity: 1.0; }
-  63%  { opacity: 0.98; }
-  68%  { opacity: 1.0; }
-  100% { opacity: 1.0; }
+  0% {
+    opacity: 1;
+  }
+  5% {
+    opacity: 0.97;
+  }
+  10% {
+    opacity: 1;
+  }
+  58% {
+    opacity: 1;
+  }
+  63% {
+    opacity: 0.98;
+  }
+  68% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes blink {
-  0%, 49% { visibility: visible; }
-  50%, 100% { visibility: hidden; }
+  0%,
+  49% {
+    visibility: visible;
+  }
+  50%,
+  100% {
+    visibility: hidden;
+  }
 }
 
 /* ── Shared text glow ────────────────────────────────────────────── */
 .term-glow {
-  text-shadow: 0 0 6px var(--term-glow), 0 0 14px var(--term-glow);
+  text-shadow:
+    0 0 6px var(--term-glow),
+    0 0 14px var(--term-glow);
 }
 
 /* ── Boot sequence ───────────────────────────────────────────────── */
@@ -122,16 +144,26 @@
   font-size: var(--term-size);
   line-height: var(--term-lh);
   color: var(--term-fg);
-  text-shadow: 0 0 6px var(--term-glow), 0 0 14px var(--term-glow);
+  text-shadow:
+    0 0 6px var(--term-glow),
+    0 0 14px var(--term-glow);
   white-space: pre-wrap;
   word-break: break-all;
   min-height: calc(var(--term-size) * var(--term-lh));
 }
 
-.term-line--error  { opacity: 0.6; }
-.term-line--prompt { opacity: 0.8; }
-.term-line--system { opacity: 0.95; }
-.term-line--output { opacity: 1.0; }
+.term-line--error {
+  opacity: 0.6;
+}
+.term-line--prompt {
+  opacity: 0.8;
+}
+.term-line--system {
+  opacity: 0.95;
+}
+.term-line--output {
+  opacity: 1;
+}
 
 /* ── Input row ───────────────────────────────────────────────────── */
 .term-input-row {
@@ -146,7 +178,9 @@
   font-size: var(--term-size);
   line-height: var(--term-lh);
   color: var(--term-fg);
-  text-shadow: 0 0 6px var(--term-glow), 0 0 14px var(--term-glow);
+  text-shadow:
+    0 0 6px var(--term-glow),
+    0 0 14px var(--term-glow);
   white-space: pre;
   user-select: none;
   flex-shrink: 0;
@@ -186,7 +220,9 @@
   font-size: var(--term-size);
   line-height: var(--term-lh);
   color: var(--term-fg);
-  text-shadow: 0 0 6px var(--term-glow), 0 0 14px var(--term-glow);
+  text-shadow:
+    0 0 6px var(--term-glow),
+    0 0 14px var(--term-glow);
   white-space: pre;
   pointer-events: none;
   display: flex;
@@ -198,7 +234,9 @@
   font-family: var(--term-font);
   font-size: var(--term-size);
   color: var(--term-fg);
-  text-shadow: 0 0 6px var(--term-glow), 0 0 14px var(--term-glow);
+  text-shadow:
+    0 0 6px var(--term-glow),
+    0 0 14px var(--term-glow);
   animation: blink 0.75s step-end infinite;
   flex-shrink: 0;
   line-height: var(--term-lh);

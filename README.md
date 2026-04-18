@@ -8,16 +8,16 @@ Live at **[latte.cx](https://latte.cx)**
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | [SvelteKit](https://kit.svelte.dev/) + TypeScript |
-| Styling | [Tailwind CSS v4](https://tailwindcss.com/) (`@tailwindcss/vite`) |
-| 3D / WebGL | [Three.js](https://threejs.org/) via [Threlte](https://threlte.xyz/) (`@threlte/core`, `@threlte/extras`) |
-| Post-processing | `three/examples` EffectComposer + UnrealBloomPass |
-| Markdown | [mdsvex](https://mdsvex.pngwn.io/) |
-| Fonts | Google Fonts — Rajdhani (headings), Share Tech Mono (body) |
-| Audio | Web Audio API (synthesized, no external files) |
-| Deployment | Docker (nginx:alpine) + Traefik reverse proxy |
+| Layer           | Technology                                                                                                |
+| --------------- | --------------------------------------------------------------------------------------------------------- |
+| Framework       | [SvelteKit](https://kit.svelte.dev/) + TypeScript                                                         |
+| Styling         | [Tailwind CSS v4](https://tailwindcss.com/) (`@tailwindcss/vite`)                                         |
+| 3D / WebGL      | [Three.js](https://threejs.org/) via [Threlte](https://threlte.xyz/) (`@threlte/core`, `@threlte/extras`) |
+| Post-processing | `three/examples` EffectComposer + UnrealBloomPass                                                         |
+| Markdown        | [mdsvex](https://mdsvex.pngwn.io/)                                                                        |
+| Fonts           | Google Fonts — Rajdhani (headings), Share Tech Mono (body)                                                |
+| Audio           | Web Audio API (synthesized, no external files)                                                            |
+| Deployment      | Docker (nginx:alpine) + Traefik reverse proxy                                                             |
 
 ---
 
@@ -95,12 +95,12 @@ src/
 
 ## Design Tokens
 
-| Name | Hex |
-|---|---|
+| Name          | Hex       |
+| ------------- | --------- |
 | Iconic Yellow | `#F2E900` |
-| Cyan | `#02D7F2` |
-| Neon Cyan | `#25E1ED` |
-| Hot Magenta | `#ED1E79` |
+| Cyan          | `#02D7F2` |
+| Neon Cyan     | `#25E1ED` |
+| Hot Magenta   | `#ED1E79` |
 | Electric Blue | `#007AFF` |
-| Hot Red | `#FF1111` |
-| Deep Black | `#0A0A0F` |
+| Hot Red       | `#FF1111` |
+| Deep Black    | `#0A0A0F` |

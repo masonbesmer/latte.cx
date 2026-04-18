@@ -1,9 +1,9 @@
 ---
 title: DARKNET INFRASTRUCTURE
 slug: darknet-infrastructure
-tags: ['networking', 'linux']
+tags: ["networking", "linux"]
 category: networking
-date: '2024-07-20'
+date: "2024-07-20"
 summary: Zero-trust VLAN-segmented network with pfSense firewall, IDS/IPS, and WireGuard mesh VPN.
 ---
 
@@ -73,9 +73,9 @@ Tunnel performance averages 850 Mbps on gigabit uplinks with sub-2ms additional 
 
 All network telemetry flows into a Prometheus/Grafana stack:
 
-| Source | Metrics |
-|--------|---------|
-| pfSense | firewall state table, interface throughput, rule counters |
-| Suricata | alert rate, category breakdown, top source IPs |
-| WireGuard | peer handshake timestamps, bytes transferred |
-| Switches | port utilization, spanning tree events |
+| Source    | Metrics                                                   |
+| --------- | --------------------------------------------------------- |
+| pfSense   | firewall state table, interface throughput, rule counters |
+| Suricata  | alert rate, category breakdown, top source IPs            |
+| WireGuard | peer handshake timestamps, bytes transferred              |
+| Switches  | port utilization, spanning tree events                    |

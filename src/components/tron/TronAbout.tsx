@@ -1,13 +1,16 @@
 export function TronAbout() {
   const specs = [
-    { label: 'DESIGNATION', value: 'SONGBIRD // MASON BESMER' },
-    { label: 'FUNCTION', value: 'SYSTEMS ENGINEER / TINKERER' },
-    { label: 'SECTOR', value: 'INFRASTRUCTURE & HOME AUTOMATION' },
-    { label: 'EXPERTISE', value: 'LINUX · DOCKER · PROXMOX · NETWORKING' },
-    { label: 'PHILOSOPHY', value: 'BUILD IT YOURSELF. UNDERSTAND EVERY LAYER.' },
-    { label: 'STATUS', value: 'ACTIVE // OPEN TO COLLABORATION' },
-    { label: 'LOCATION', value: 'GRID NODE: UNITED STATES' },
-  ]
+    { label: "DESIGNATION", value: "SONGBIRD // MASON BESMER" },
+    { label: "FUNCTION", value: "SYSTEMS ENGINEER / TINKERER" },
+    { label: "SECTOR", value: "INFRASTRUCTURE & HOME AUTOMATION" },
+    { label: "EXPERTISE", value: "LINUX · DOCKER · PROXMOX · NETWORKING" },
+    {
+      label: "PHILOSOPHY",
+      value: "BUILD IT YOURSELF. UNDERSTAND EVERY LAYER.",
+    },
+    { label: "STATUS", value: "ACTIVE // OPEN TO COLLABORATION" },
+    { label: "LOCATION", value: "GRID NODE: UNITED STATES" },
+  ];
 
   return (
     <section id="about" className="tron-about" aria-label="About section">
@@ -40,7 +43,9 @@ export function TronAbout() {
 
           <div className="tron-hud-footer">
             <span className="tron-hud-footer-bar" aria-hidden="true" />
-            <span className="tron-hud-footer-text">RECORD INTEGRITY: 100% // CLEARANCE: ALPHA</span>
+            <span className="tron-hud-footer-text">
+              RECORD INTEGRITY: 100% // CLEARANCE: ALPHA
+            </span>
             <span className="tron-hud-footer-bar" aria-hidden="true" />
           </div>
         </div>
@@ -164,5 +169,5 @@ export function TronAbout() {
         .tron-hud-footer-text { white-space: nowrap; }
       `}</style>
     </section>
-  )
+  );
 }
