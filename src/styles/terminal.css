@@ -33,6 +33,7 @@
   overflow: hidden;
   animation: flicker 2s linear infinite;
   will-change: opacity;
+  filter: url(#crt-barrel);
 }
 
 /* Scanlines overlay */
