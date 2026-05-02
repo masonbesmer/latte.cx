@@ -60,8 +60,9 @@ Three-layer `text-shadow` on all text elements:
 
 ### Barrel / CRT Curvature Distortion
 Inline `<svg aria-hidden style="display:none">` placed inside `.term-screen-wrap` in `TerminalPage.tsx`. Defines filter `#crt-barrel` using:
-- `<feImage>` referencing an inline radial gradient data URI as displacement source
+- A `<radialGradient id="barrel-grad">` + `<rect fill="url(#barrel-grad)">` rendered inside the filter as the displacement source via `feImage`
 - `<feDisplacementMap>` with `scale="18"` (subtle), `xChannelSelector="R"`, `yChannelSelector="G"`
+- All primitives defined within the same `<defs>` block — no external file references
 
 Applied to `.term-screen-wrap` via `filter: url(#crt-barrel)`. Produces convex outward bulge at edges, imperceptible at center.
 
