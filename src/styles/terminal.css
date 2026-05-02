@@ -1,17 +1,11 @@
-@font-face {
-  font-family: "FixedsysExcelsior";
-  src: url("/fonts/FixedsysExcelsior.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
 /* ── Tokens ──────────────────────────────────────────────────────── */
 :root {
-  --term-fg: #39ff14;
-  --term-glow: #39ff14;
-  --term-bg: #0a0a0a;
-  --term-font: "FixedsysExcelsior", "Courier New", monospace;
+  --term-fg: #3EEF82;
+  --term-glow: #3EEF82;
+  --term-bg: #000000;
+  --term-font: 'Share Tech Mono', monospace;
   --term-size: 16px;
   --term-lh: 1.5;
 }
@@ -26,6 +20,8 @@
   font-family: var(--term-font);
   font-size: var(--term-size);
   color: var(--term-fg);
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: none;
 }
 
 /* ── Screen wrapper (scanlines + vignette live here) ─────────────── */
