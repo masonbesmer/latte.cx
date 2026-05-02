@@ -36,6 +36,7 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: root
           key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: 38796
           script: |
             docker compose -f /boot/config/plugins/compose.manager/projects/latte.cx/docker-compose.yml pull
             docker compose -f /boot/config/plugins/compose.manager/projects/latte.cx/docker-compose.yml up -d
