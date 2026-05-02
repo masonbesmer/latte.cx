@@ -8,269 +8,290 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as TronRouteRouteImport } from './routes/tron/route'
-import { Route as SynthwaveRouteRouteImport } from './routes/synthwave/route'
-import { Route as CyberpunkRouteRouteImport } from './routes/cyberpunk/route'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as VinylIndexRouteImport } from './routes/vinyl/index'
-import { Route as TronIndexRouteImport } from './routes/tron/index'
-import { Route as SynthwaveIndexRouteImport } from './routes/synthwave/index'
-import { Route as CyberpunkIndexRouteImport } from './routes/cyberpunk/index'
-import { Route as CyberpunkContactIndexRouteImport } from './routes/cyberpunk/contact/index'
-import { Route as CyberpunkProjectsSlugRouteImport } from './routes/cyberpunk/projects/$slug'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as FalloutRouteImport } from "./routes/fallout";
+import { Route as TronRouteRouteImport } from "./routes/tron/route";
+import { Route as SynthwaveRouteRouteImport } from "./routes/synthwave/route";
+import { Route as CyberpunkRouteRouteImport } from "./routes/cyberpunk/route";
+import { Route as IndexRouteImport } from "./routes/index";
+import { Route as VinylIndexRouteImport } from "./routes/vinyl/index";
+import { Route as TronIndexRouteImport } from "./routes/tron/index";
+import { Route as SynthwaveIndexRouteImport } from "./routes/synthwave/index";
+import { Route as CyberpunkIndexRouteImport } from "./routes/cyberpunk/index";
+import { Route as CyberpunkContactIndexRouteImport } from "./routes/cyberpunk/contact/index";
+import { Route as CyberpunkProjectsSlugRouteImport } from "./routes/cyberpunk/projects/$slug";
 
+const FalloutRoute = FalloutRouteImport.update({
+  id: "/fallout",
+  path: "/fallout",
+  getParentRoute: () => rootRouteImport,
+} as any);
 const TronRouteRoute = TronRouteRouteImport.update({
-  id: '/tron',
-  path: '/tron',
+  id: "/tron",
+  path: "/tron",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const SynthwaveRouteRoute = SynthwaveRouteRouteImport.update({
-  id: '/synthwave',
-  path: '/synthwave',
+  id: "/synthwave",
+  path: "/synthwave",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const CyberpunkRouteRoute = CyberpunkRouteRouteImport.update({
-  id: '/cyberpunk',
-  path: '/cyberpunk',
+  id: "/cyberpunk",
+  path: "/cyberpunk",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const VinylIndexRoute = VinylIndexRouteImport.update({
-  id: '/vinyl/',
-  path: '/vinyl/',
+  id: "/vinyl/",
+  path: "/vinyl/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const TronIndexRoute = TronIndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => TronRouteRoute,
-} as any)
+} as any);
 const SynthwaveIndexRoute = SynthwaveIndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => SynthwaveRouteRoute,
-} as any)
+} as any);
 const CyberpunkIndexRoute = CyberpunkIndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => CyberpunkRouteRoute,
-} as any)
+} as any);
 const CyberpunkContactIndexRoute = CyberpunkContactIndexRouteImport.update({
-  id: '/contact/',
-  path: '/contact/',
+  id: "/contact/",
+  path: "/contact/",
   getParentRoute: () => CyberpunkRouteRoute,
-} as any)
+} as any);
 const CyberpunkProjectsSlugRoute = CyberpunkProjectsSlugRouteImport.update({
-  id: '/projects/$slug',
-  path: '/projects/$slug',
+  id: "/projects/$slug",
+  path: "/projects/$slug",
   getParentRoute: () => CyberpunkRouteRoute,
-} as any)
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/cyberpunk': typeof CyberpunkRouteRouteWithChildren
-  '/synthwave': typeof SynthwaveRouteRouteWithChildren
-  '/tron': typeof TronRouteRouteWithChildren
-  '/cyberpunk/': typeof CyberpunkIndexRoute
-  '/synthwave/': typeof SynthwaveIndexRoute
-  '/tron/': typeof TronIndexRoute
-  '/vinyl/': typeof VinylIndexRoute
-  '/cyberpunk/projects/$slug': typeof CyberpunkProjectsSlugRoute
-  '/cyberpunk/contact/': typeof CyberpunkContactIndexRoute
+  "/": typeof IndexRoute;
+  "/cyberpunk": typeof CyberpunkRouteRouteWithChildren;
+  "/synthwave": typeof SynthwaveRouteRouteWithChildren;
+  "/tron": typeof TronRouteRouteWithChildren;
+  "/fallout": typeof FalloutRoute;
+  "/cyberpunk/": typeof CyberpunkIndexRoute;
+  "/synthwave/": typeof SynthwaveIndexRoute;
+  "/tron/": typeof TronIndexRoute;
+  "/vinyl/": typeof VinylIndexRoute;
+  "/cyberpunk/projects/$slug": typeof CyberpunkProjectsSlugRoute;
+  "/cyberpunk/contact/": typeof CyberpunkContactIndexRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/cyberpunk': typeof CyberpunkIndexRoute
-  '/synthwave': typeof SynthwaveIndexRoute
-  '/tron': typeof TronIndexRoute
-  '/vinyl': typeof VinylIndexRoute
-  '/cyberpunk/projects/$slug': typeof CyberpunkProjectsSlugRoute
-  '/cyberpunk/contact': typeof CyberpunkContactIndexRoute
+  "/": typeof IndexRoute;
+  "/fallout": typeof FalloutRoute;
+  "/cyberpunk": typeof CyberpunkIndexRoute;
+  "/synthwave": typeof SynthwaveIndexRoute;
+  "/tron": typeof TronIndexRoute;
+  "/vinyl": typeof VinylIndexRoute;
+  "/cyberpunk/projects/$slug": typeof CyberpunkProjectsSlugRoute;
+  "/cyberpunk/contact": typeof CyberpunkContactIndexRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/cyberpunk': typeof CyberpunkRouteRouteWithChildren
-  '/synthwave': typeof SynthwaveRouteRouteWithChildren
-  '/tron': typeof TronRouteRouteWithChildren
-  '/cyberpunk/': typeof CyberpunkIndexRoute
-  '/synthwave/': typeof SynthwaveIndexRoute
-  '/tron/': typeof TronIndexRoute
-  '/vinyl/': typeof VinylIndexRoute
-  '/cyberpunk/projects/$slug': typeof CyberpunkProjectsSlugRoute
-  '/cyberpunk/contact/': typeof CyberpunkContactIndexRoute
+  __root__: typeof rootRouteImport;
+  "/": typeof IndexRoute;
+  "/cyberpunk": typeof CyberpunkRouteRouteWithChildren;
+  "/synthwave": typeof SynthwaveRouteRouteWithChildren;
+  "/tron": typeof TronRouteRouteWithChildren;
+  "/fallout": typeof FalloutRoute;
+  "/cyberpunk/": typeof CyberpunkIndexRoute;
+  "/synthwave/": typeof SynthwaveIndexRoute;
+  "/tron/": typeof TronIndexRoute;
+  "/vinyl/": typeof VinylIndexRoute;
+  "/cyberpunk/projects/$slug": typeof CyberpunkProjectsSlugRoute;
+  "/cyberpunk/contact/": typeof CyberpunkContactIndexRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/'
-    | '/cyberpunk'
-    | '/synthwave'
-    | '/tron'
-    | '/cyberpunk/'
-    | '/synthwave/'
-    | '/tron/'
-    | '/vinyl/'
-    | '/cyberpunk/projects/$slug'
-    | '/cyberpunk/contact/'
-  fileRoutesByTo: FileRoutesByTo
+    | "/"
+    | "/cyberpunk"
+    | "/synthwave"
+    | "/tron"
+    | "/fallout"
+    | "/cyberpunk/"
+    | "/synthwave/"
+    | "/tron/"
+    | "/vinyl/"
+    | "/cyberpunk/projects/$slug"
+    | "/cyberpunk/contact/";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/'
-    | '/cyberpunk'
-    | '/synthwave'
-    | '/tron'
-    | '/vinyl'
-    | '/cyberpunk/projects/$slug'
-    | '/cyberpunk/contact'
+    | "/"
+    | "/fallout"
+    | "/cyberpunk"
+    | "/synthwave"
+    | "/tron"
+    | "/vinyl"
+    | "/cyberpunk/projects/$slug"
+    | "/cyberpunk/contact";
   id:
-    | '__root__'
-    | '/'
-    | '/cyberpunk'
-    | '/synthwave'
-    | '/tron'
-    | '/cyberpunk/'
-    | '/synthwave/'
-    | '/tron/'
-    | '/vinyl/'
-    | '/cyberpunk/projects/$slug'
-    | '/cyberpunk/contact/'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/cyberpunk"
+    | "/synthwave"
+    | "/tron"
+    | "/fallout"
+    | "/cyberpunk/"
+    | "/synthwave/"
+    | "/tron/"
+    | "/vinyl/"
+    | "/cyberpunk/projects/$slug"
+    | "/cyberpunk/contact/";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  CyberpunkRouteRoute: typeof CyberpunkRouteRouteWithChildren
-  SynthwaveRouteRoute: typeof SynthwaveRouteRouteWithChildren
-  TronRouteRoute: typeof TronRouteRouteWithChildren
-  VinylIndexRoute: typeof VinylIndexRoute
+  IndexRoute: typeof IndexRoute;
+  CyberpunkRouteRoute: typeof CyberpunkRouteRouteWithChildren;
+  SynthwaveRouteRoute: typeof SynthwaveRouteRouteWithChildren;
+  TronRouteRoute: typeof TronRouteRouteWithChildren;
+  FalloutRoute: typeof FalloutRoute;
+  VinylIndexRoute: typeof VinylIndexRoute;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/tron': {
-      id: '/tron'
-      path: '/tron'
-      fullPath: '/tron'
-      preLoaderRoute: typeof TronRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/synthwave': {
-      id: '/synthwave'
-      path: '/synthwave'
-      fullPath: '/synthwave'
-      preLoaderRoute: typeof SynthwaveRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cyberpunk': {
-      id: '/cyberpunk'
-      path: '/cyberpunk'
-      fullPath: '/cyberpunk'
-      preLoaderRoute: typeof CyberpunkRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/vinyl/': {
-      id: '/vinyl/'
-      path: '/vinyl'
-      fullPath: '/vinyl/'
-      preLoaderRoute: typeof VinylIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tron/': {
-      id: '/tron/'
-      path: '/'
-      fullPath: '/tron/'
-      preLoaderRoute: typeof TronIndexRouteImport
-      parentRoute: typeof TronRouteRoute
-    }
-    '/synthwave/': {
-      id: '/synthwave/'
-      path: '/'
-      fullPath: '/synthwave/'
-      preLoaderRoute: typeof SynthwaveIndexRouteImport
-      parentRoute: typeof SynthwaveRouteRoute
-    }
-    '/cyberpunk/': {
-      id: '/cyberpunk/'
-      path: '/'
-      fullPath: '/cyberpunk/'
-      preLoaderRoute: typeof CyberpunkIndexRouteImport
-      parentRoute: typeof CyberpunkRouteRoute
-    }
-    '/cyberpunk/contact/': {
-      id: '/cyberpunk/contact/'
-      path: '/contact'
-      fullPath: '/cyberpunk/contact/'
-      preLoaderRoute: typeof CyberpunkContactIndexRouteImport
-      parentRoute: typeof CyberpunkRouteRoute
-    }
-    '/cyberpunk/projects/$slug': {
-      id: '/cyberpunk/projects/$slug'
-      path: '/projects/$slug'
-      fullPath: '/cyberpunk/projects/$slug'
-      preLoaderRoute: typeof CyberpunkProjectsSlugRouteImport
-      parentRoute: typeof CyberpunkRouteRoute
-    }
+    "/fallout": {
+      id: "/fallout";
+      path: "/fallout";
+      fullPath: "/fallout";
+      preLoaderRoute: typeof FalloutRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/tron": {
+      id: "/tron";
+      path: "/tron";
+      fullPath: "/tron";
+      preLoaderRoute: typeof TronRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/synthwave": {
+      id: "/synthwave";
+      path: "/synthwave";
+      fullPath: "/synthwave";
+      preLoaderRoute: typeof SynthwaveRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/cyberpunk": {
+      id: "/cyberpunk";
+      path: "/cyberpunk";
+      fullPath: "/cyberpunk";
+      preLoaderRoute: typeof CyberpunkRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/vinyl/": {
+      id: "/vinyl/";
+      path: "/vinyl";
+      fullPath: "/vinyl/";
+      preLoaderRoute: typeof VinylIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/tron/": {
+      id: "/tron/";
+      path: "/";
+      fullPath: "/tron/";
+      preLoaderRoute: typeof TronIndexRouteImport;
+      parentRoute: typeof TronRouteRoute;
+    };
+    "/synthwave/": {
+      id: "/synthwave/";
+      path: "/";
+      fullPath: "/synthwave/";
+      preLoaderRoute: typeof SynthwaveIndexRouteImport;
+      parentRoute: typeof SynthwaveRouteRoute;
+    };
+    "/cyberpunk/": {
+      id: "/cyberpunk/";
+      path: "/";
+      fullPath: "/cyberpunk/";
+      preLoaderRoute: typeof CyberpunkIndexRouteImport;
+      parentRoute: typeof CyberpunkRouteRoute;
+    };
+    "/cyberpunk/contact/": {
+      id: "/cyberpunk/contact/";
+      path: "/contact";
+      fullPath: "/cyberpunk/contact/";
+      preLoaderRoute: typeof CyberpunkContactIndexRouteImport;
+      parentRoute: typeof CyberpunkRouteRoute;
+    };
+    "/cyberpunk/projects/$slug": {
+      id: "/cyberpunk/projects/$slug";
+      path: "/projects/$slug";
+      fullPath: "/cyberpunk/projects/$slug";
+      preLoaderRoute: typeof CyberpunkProjectsSlugRouteImport;
+      parentRoute: typeof CyberpunkRouteRoute;
+    };
   }
 }
 
 interface CyberpunkRouteRouteChildren {
-  CyberpunkIndexRoute: typeof CyberpunkIndexRoute
-  CyberpunkProjectsSlugRoute: typeof CyberpunkProjectsSlugRoute
-  CyberpunkContactIndexRoute: typeof CyberpunkContactIndexRoute
+  CyberpunkIndexRoute: typeof CyberpunkIndexRoute;
+  CyberpunkProjectsSlugRoute: typeof CyberpunkProjectsSlugRoute;
+  CyberpunkContactIndexRoute: typeof CyberpunkContactIndexRoute;
 }
 
 const CyberpunkRouteRouteChildren: CyberpunkRouteRouteChildren = {
   CyberpunkIndexRoute: CyberpunkIndexRoute,
   CyberpunkProjectsSlugRoute: CyberpunkProjectsSlugRoute,
   CyberpunkContactIndexRoute: CyberpunkContactIndexRoute,
-}
+};
 
 const CyberpunkRouteRouteWithChildren = CyberpunkRouteRoute._addFileChildren(
   CyberpunkRouteRouteChildren,
-)
+);
 
 interface SynthwaveRouteRouteChildren {
-  SynthwaveIndexRoute: typeof SynthwaveIndexRoute
+  SynthwaveIndexRoute: typeof SynthwaveIndexRoute;
 }
 
 const SynthwaveRouteRouteChildren: SynthwaveRouteRouteChildren = {
   SynthwaveIndexRoute: SynthwaveIndexRoute,
-}
+};
 
 const SynthwaveRouteRouteWithChildren = SynthwaveRouteRoute._addFileChildren(
   SynthwaveRouteRouteChildren,
-)
+);
 
 interface TronRouteRouteChildren {
-  TronIndexRoute: typeof TronIndexRoute
+  TronIndexRoute: typeof TronIndexRoute;
 }
 
 const TronRouteRouteChildren: TronRouteRouteChildren = {
   TronIndexRoute: TronIndexRoute,
-}
+};
 
 const TronRouteRouteWithChildren = TronRouteRoute._addFileChildren(
   TronRouteRouteChildren,
-)
+);
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CyberpunkRouteRoute: CyberpunkRouteRouteWithChildren,
   SynthwaveRouteRoute: SynthwaveRouteRouteWithChildren,
   TronRouteRoute: TronRouteRouteWithChildren,
+  FalloutRoute: FalloutRoute,
   VinylIndexRoute: VinylIndexRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
