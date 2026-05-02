@@ -37,6 +37,7 @@ export function TerminalPage() {
   const {
     outputLines,
     inputBuffer,
+    cwd,
     mode,
     setInputBuffer,
     submit,
@@ -82,6 +83,7 @@ export function TerminalPage() {
           <TerminalScreen
             outputLines={outputLines}
             inputBuffer={inputBuffer}
+            cwd={cwd}
             mode={mode}
             onInputChange={setInputBuffer}
             onSubmit={submit}

@@ -3,6 +3,7 @@ import type { TerminalMode } from "../../lib/terminal/types";
 
 interface TerminalInputProps {
   value: string;
+  cwd: string;
   mode: TerminalMode;
   onChange: (v: string) => void;
   onSubmit: (v: string) => void;
@@ -12,6 +13,7 @@ interface TerminalInputProps {
 
 export function TerminalInput({
   value,
+  cwd,
   mode,
   onChange,
   onSubmit,
@@ -33,7 +35,7 @@ export function TerminalInput({
     }
   }, [value]);
 
-  const promptLabel = "> ";
+  const promptLabel = `${cwd}> `;
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Tab") {

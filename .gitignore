@@ -1,5 +1,11 @@
 node_modules
 
+# Yarn / PnP artifacts (repo uses npm lockfile)
+.yarn/
+.pnp.cjs
+.pnp.loader.mjs
+yarn.lock
+
 # Output
 .output
 .vercel

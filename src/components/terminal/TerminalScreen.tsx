@@ -5,6 +5,7 @@ import { TerminalInput } from "./TerminalInput";
 interface TerminalScreenProps {
   outputLines: Line[];
   inputBuffer: string;
+  cwd: string;
   mode: TerminalMode;
   onInputChange: (v: string) => void;
   onSubmit: (v: string) => void;
@@ -15,6 +16,7 @@ interface TerminalScreenProps {
 export function TerminalScreen({
   outputLines,
   inputBuffer,
+  cwd,
   mode,
   onInputChange,
   onSubmit,
@@ -54,6 +56,7 @@ export function TerminalScreen({
       </div>
       <TerminalInput
         value={inputBuffer}
+        cwd={cwd}
         mode={mode}
         onChange={onInputChange}
         onSubmit={onSubmit}
