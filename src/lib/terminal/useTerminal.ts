@@ -51,10 +51,7 @@ export function useTerminal() {
 
   const submit = useCallback((input: string) => {
     setState((prev) => {
-      const promptLine = mkLine(
-        prev.mode === "editing" ? `> ${input}` : `C:\\> ${input}`,
-        "prompt",
-      );
+      const promptLine = mkLine(`> ${input}`, "prompt");
 
       // ── EDITING MODE ──────────────────────────────────────────────────
       if (prev.mode === "editing") {
@@ -251,7 +248,7 @@ export function useTerminal() {
       }
 
       // Multiple matches — show them
-      const promptLine = mkLine(`C:\\> ${prev.inputBuffer}`, "prompt");
+      const promptLine = mkLine(`> ${prev.inputBuffer}`, "prompt");
       const matchLine = mkLine(matches.join(" "), "output");
       return {
         ...prev,

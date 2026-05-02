@@ -33,7 +33,7 @@ export function TerminalInput({
     }
   }, [value]);
 
-  const promptLabel = mode === "editing" ? "> " : "C:\\> ";
+  const promptLabel = "> ";
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Tab") {
