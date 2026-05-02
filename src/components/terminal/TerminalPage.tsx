@@ -46,7 +46,11 @@ export function TerminalPage() {
 
   return (
     <div className="term-root">
-      <svg aria-hidden style={{ display: "none" }}>
+      <svg
+        aria-hidden
+        focusable="false"
+        style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }}
+      >
         <defs>
           <filter
             id="crt-barrel"
@@ -59,10 +63,6 @@ export function TerminalPage() {
             <feImage
               href={barrelMapUrl}
               result="displace-map"
-              x="0"
-              y="0"
-              width="100%"
-              height="100%"
               preserveAspectRatio="none"
             />
             <feDisplacementMap
