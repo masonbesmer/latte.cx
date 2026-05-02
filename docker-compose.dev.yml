@@ -1,10 +1,8 @@
 services:
   latte-cx:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: latte-cx:local
-    container_name: latte-cx
+    image: ghcr.io/masonbesmer/latte.cx:dev
+    pull_policy: always
+    container_name: latte.cx
     ports:
       - "8080:80"
     restart: unless-stopped
