@@ -6,7 +6,7 @@ export function DestinyLanding() {
     <div
       style={{
         position: "relative",
-        minHeight: "100vh",
+        height: "100vh",
         background: "#06090f",
         overflow: "hidden",
       }}
