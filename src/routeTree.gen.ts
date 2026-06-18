@@ -9,17 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as DestinyRouteImport } from './routes/destiny'
 import { Route as TronRouteRouteImport } from './routes/tron/route'
 import { Route as SynthwaveRouteRouteImport } from './routes/synthwave/route'
 import { Route as CyberpunkRouteRouteImport } from './routes/cyberpunk/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TronIndexRouteImport } from './routes/tron/index'
 import { Route as SynthwaveIndexRouteImport } from './routes/synthwave/index'
-
 import { Route as CyberpunkIndexRouteImport } from './routes/cyberpunk/index'
 import { Route as CyberpunkContactIndexRouteImport } from './routes/cyberpunk/contact/index'
 import { Route as CyberpunkProjectsSlugRouteImport } from './routes/cyberpunk/projects/$slug'
 
+const DestinyRoute = DestinyRouteImport.update({
+  id: '/destiny',
+  path: '/destiny',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TronRouteRoute = TronRouteRouteImport.update({
   id: '/tron',
   path: '/tron',
@@ -69,19 +74,21 @@ const CyberpunkProjectsSlugRoute = CyberpunkProjectsSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cyberpunk': typeof CyberpunkRouteRouteWithChildren
-  '/tron': typeof TronRouteRouteWithChildren
   '/synthwave': typeof SynthwaveRouteRouteWithChildren
+  '/tron': typeof TronRouteRouteWithChildren
+  '/destiny': typeof DestinyRoute
   '/cyberpunk/': typeof CyberpunkIndexRoute
-  '/tron/': typeof TronIndexRoute
   '/synthwave/': typeof SynthwaveIndexRoute
+  '/tron/': typeof TronIndexRoute
   '/cyberpunk/projects/$slug': typeof CyberpunkProjectsSlugRoute
   '/cyberpunk/contact/': typeof CyberpunkContactIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/destiny': typeof DestinyRoute
   '/cyberpunk': typeof CyberpunkIndexRoute
-  '/tron': typeof TronIndexRoute
   '/synthwave': typeof SynthwaveIndexRoute
+  '/tron': typeof TronIndexRoute
   '/cyberpunk/projects/$slug': typeof CyberpunkProjectsSlugRoute
   '/cyberpunk/contact': typeof CyberpunkContactIndexRoute
 }
@@ -89,11 +96,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cyberpunk': typeof CyberpunkRouteRouteWithChildren
-  '/tron': typeof TronRouteRouteWithChildren
   '/synthwave': typeof SynthwaveRouteRouteWithChildren
+  '/tron': typeof TronRouteRouteWithChildren
+  '/destiny': typeof DestinyRoute
   '/cyberpunk/': typeof CyberpunkIndexRoute
-  '/tron/': typeof TronIndexRoute
   '/synthwave/': typeof SynthwaveIndexRoute
+  '/tron/': typeof TronIndexRoute
   '/cyberpunk/projects/$slug': typeof CyberpunkProjectsSlugRoute
   '/cyberpunk/contact/': typeof CyberpunkContactIndexRoute
 }
@@ -102,30 +110,33 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/cyberpunk'
-    | '/tron'
     | '/synthwave'
+    | '/tron'
+    | '/destiny'
     | '/cyberpunk/'
-    | '/tron/'
     | '/synthwave/'
+    | '/tron/'
     | '/cyberpunk/projects/$slug'
     | '/cyberpunk/contact/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/destiny'
     | '/cyberpunk'
-    | '/tron'
     | '/synthwave'
+    | '/tron'
     | '/cyberpunk/projects/$slug'
     | '/cyberpunk/contact'
   id:
     | '__root__'
     | '/'
     | '/cyberpunk'
-    | '/tron'
     | '/synthwave'
+    | '/tron'
+    | '/destiny'
     | '/cyberpunk/'
-    | '/tron/'
     | '/synthwave/'
+    | '/tron/'
     | '/cyberpunk/projects/$slug'
     | '/cyberpunk/contact/'
   fileRoutesById: FileRoutesById
@@ -133,12 +144,20 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CyberpunkRouteRoute: typeof CyberpunkRouteRouteWithChildren
-  TronRouteRoute: typeof TronRouteRouteWithChildren
   SynthwaveRouteRoute: typeof SynthwaveRouteRouteWithChildren
+  TronRouteRoute: typeof TronRouteRouteWithChildren
+  DestinyRoute: typeof DestinyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/destiny': {
+      id: '/destiny'
+      path: '/destiny'
+      fullPath: '/destiny'
+      preLoaderRoute: typeof DestinyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tron': {
       id: '/tron'
       path: '/tron'
@@ -221,18 +240,6 @@ const CyberpunkRouteRouteWithChildren = CyberpunkRouteRoute._addFileChildren(
   CyberpunkRouteRouteChildren,
 )
 
-interface TronRouteRouteChildren {
-  TronIndexRoute: typeof TronIndexRoute
-}
-
-const TronRouteRouteChildren: TronRouteRouteChildren = {
-  TronIndexRoute: TronIndexRoute,
-}
-
-const TronRouteRouteWithChildren = TronRouteRoute._addFileChildren(
-  TronRouteRouteChildren,
-)
-
 interface SynthwaveRouteRouteChildren {
   SynthwaveIndexRoute: typeof SynthwaveIndexRoute
 }
@@ -245,11 +252,24 @@ const SynthwaveRouteRouteWithChildren = SynthwaveRouteRoute._addFileChildren(
   SynthwaveRouteRouteChildren,
 )
 
+interface TronRouteRouteChildren {
+  TronIndexRoute: typeof TronIndexRoute
+}
+
+const TronRouteRouteChildren: TronRouteRouteChildren = {
+  TronIndexRoute: TronIndexRoute,
+}
+
+const TronRouteRouteWithChildren = TronRouteRoute._addFileChildren(
+  TronRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CyberpunkRouteRoute: CyberpunkRouteRouteWithChildren,
-  TronRouteRoute: TronRouteRouteWithChildren,
   SynthwaveRouteRoute: SynthwaveRouteRouteWithChildren,
+  TronRouteRoute: TronRouteRouteWithChildren,
+  DestinyRoute: DestinyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
