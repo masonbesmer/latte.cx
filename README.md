@@ -64,6 +64,7 @@ The project ships with a multi-stage `Dockerfile` (Node 20 build → nginx:alpin
 
 ```sh
 # Build and start
+docker compose down
 docker compose up -d --build
 ```
 
