@@ -1,0 +1,239 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+/* ── Tokens ──────────────────────────────────────────────────────── */
+:root {
+  --term-fg: #3EEF82;
+  --term-glow: #3EEF82;
+  --term-bg: #000000;
+  --term-font: 'Share Tech Mono', monospace;
+  --term-size: 16px;
+  --term-lh: 1.5;
+}
+
+/* ── Root ────────────────────────────────────────────────────────── */
+.term-root {
+  width: 100vw;
+  height: 100vh;
+  background: var(--term-bg);
+  display: flex;
+  overflow: hidden;
+  font-family: var(--term-font);
+  font-size: var(--term-size);
+  color: var(--term-fg);
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: none;
+}
+
+/* ── Screen wrapper (scanlines + vignette live here) ─────────────── */
+.term-screen-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: flicker 2s linear infinite;
+  will-change: filter;
+  filter: url(#crt-barrel);
+}
+
+/* Scanlines overlay */
+.term-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.20) 3px,
+    rgba(0, 0, 0, 0.20) 4px
+  );
+}
+
+/* Vignette overlay */
+.term-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 11;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    rgba(0, 0, 0, 0.70) 100%
+  );
+}
+
+/* ── Animations ──────────────────────────────────────────────────── */
+@keyframes flicker {
+  0%,
+  18%,
+  22%,
+  57%,
+  62%,
+  100% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0.97;
+  }
+  60% {
+    opacity: 0.98;
+  }
+}
+
+@keyframes blink {
+  0%,
+  49% {
+    visibility: visible;
+  }
+  50%,
+  100% {
+    visibility: hidden;
+  }
+}
+
+/* ── Shared text glow ────────────────────────────────────────────── */
+.term-glow {
+  text-shadow:
+    0 0 4px var(--term-glow),
+    0 0 10px var(--term-glow),
+    0 0 20px var(--term-glow);
+}
+
+/* ── Boot sequence ───────────────────────────────────────────────── */
+.term-boot {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 40px;
+  overflow: hidden;
+}
+
+/* ── Terminal screen (output + input) ────────────────────────────── */
+.term-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 40px 24px;
+  overflow: hidden;
+  outline: none;
+}
+
+.term-output {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--term-fg) var(--term-bg);
+  padding-bottom: 8px;
+}
+
+/* ── Lines ───────────────────────────────────────────────────────── */
+.term-line {
+  font-family: var(--term-font);
+  font-size: var(--term-size);
+  line-height: var(--term-lh);
+  color: var(--term-fg);
+  text-shadow:
+    0 0 4px var(--term-glow),
+    0 0 10px var(--term-glow),
+    0 0 20px var(--term-glow);
+  white-space: pre-wrap;
+  word-break: break-all;
+  min-height: calc(var(--term-size) * var(--term-lh));
+}
+
+.term-line--system {
+  opacity: 1;
+}
+.term-line--output {
+  opacity: 0.88;
+}
+.term-line--prompt {
+  opacity: 0.8;
+}
+.term-line--error {
+  opacity: 0.6;
+}
+
+/* ── Input row ───────────────────────────────────────────────────── */
+.term-input-row {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+.term-prompt-label {
+  font-family: var(--term-font);
+  font-size: var(--term-size);
+  line-height: var(--term-lh);
+  color: var(--term-fg);
+  text-shadow:
+    0 0 4px var(--term-glow),
+    0 0 10px var(--term-glow),
+    0 0 20px var(--term-glow);
+  white-space: pre;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+/* Mirror + hidden input container */
+.term-input-field {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+/*
+ * The real <input> is invisible; it captures keyboard events.
+ * The mirror <span> shows the visible text with glow.
+ */
+.term-input-real {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: transparent;
+  caret-color: transparent;
+  font-family: var(--term-font);
+  font-size: var(--term-size);
+  padding: 0;
+  margin: 0;
+  z-index: 2;
+}
+
+.term-input-mirror {
+  font-family: var(--term-font);
+  font-size: var(--term-size);
+  line-height: var(--term-lh);
+  color: var(--term-fg);
+  text-shadow:
+    0 0 4px var(--term-glow),
+    0 0 10px var(--term-glow),
+    0 0 20px var(--term-glow);
+  white-space: pre;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Cursor ──────────────────────────────────────────────────────── */
+.term-cursor {
+  font-family: var(--term-font);
+  font-size: var(--term-size);
+  color: var(--term-fg);
+  text-shadow:
+    0 0 4px var(--term-glow),
+    0 0 10px var(--term-glow),
+    0 0 20px var(--term-glow);
+  animation: blink 1s step-end infinite;
+  flex-shrink: 0;
+  line-height: var(--term-lh);
+  user-select: none;
+}

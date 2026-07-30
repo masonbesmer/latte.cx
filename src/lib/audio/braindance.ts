@@ -9,7 +9,7 @@ let staticGain: GainNode | null = null;
 let _muted = false;
 
 function getCtx(): AudioContext | null {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === "undefined") return null;
   if (!ctx) {
     try {
       ctx = new AudioContext();
@@ -23,7 +23,7 @@ function getCtx(): AudioContext | null {
 /** Resume context after a user gesture (required by browser autoplay policy). */
 export async function resume(): Promise<void> {
   const c = getCtx();
-  if (c && c.state === 'suspended') {
+  if (c && c.state === "suspended") {
     try {
       await c.resume();
     } catch {
@@ -54,7 +54,7 @@ export function playStaticFadeIn(fadeDuration: number = 2): void {
 
   // High-pass filter to keep it crunchy
   const filter = c.createBiquadFilter();
-  filter.type = 'bandpass';
+  filter.type = "bandpass";
   filter.frequency.value = 2000;
   filter.Q.value = 0.5;
 
@@ -66,7 +66,7 @@ export function playStaticFadeIn(fadeDuration: number = 2): void {
   staticGain.gain.setValueAtTime(0, c.currentTime);
   staticGain.gain.linearRampToValueAtTime(
     _muted ? 0 : 0.18,
-    c.currentTime + fadeDuration
+    c.currentTime + fadeDuration,
   );
 
   staticSource.connect(filter);
@@ -82,9 +82,16 @@ export function fadeOutStatic(fadeDuration: number = 0.8): void {
   staticGain.gain.setValueAtTime(staticGain.gain.value, c.currentTime);
   staticGain.gain.linearRampToValueAtTime(0, c.currentTime + fadeDuration);
   const src = staticSource;
-  setTimeout(() => {
-    try { src.stop(); } catch { /* already stopped */ }
-  }, fadeDuration * 1000 + 50);
+  setTimeout(
+    () => {
+      try {
+        src.stop();
+      } catch {
+        /* already stopped */
+      }
+    },
+    fadeDuration * 1000 + 50,
+  );
   staticSource = null;
 }
 
@@ -94,13 +101,13 @@ export function playSynthSting(): void {
   if (!c || _muted) return;
 
   const osc = c.createOscillator();
-  osc.type = 'sawtooth';
+  osc.type = "sawtooth";
   osc.frequency.setValueAtTime(220, c.currentTime);
   osc.frequency.exponentialRampToValueAtTime(880, c.currentTime + 0.15);
   osc.frequency.exponentialRampToValueAtTime(440, c.currentTime + 0.4);
 
   const osc2 = c.createOscillator();
-  osc2.type = 'square';
+  osc2.type = "square";
   osc2.frequency.setValueAtTime(110, c.currentTime);
   osc2.frequency.exponentialRampToValueAtTime(220, c.currentTime + 0.3);
 
@@ -125,7 +132,7 @@ export function playBassDrop(): void {
   if (!c || _muted) return;
 
   const osc = c.createOscillator();
-  osc.type = 'sine';
+  osc.type = "sine";
   osc.frequency.setValueAtTime(80, c.currentTime);
   osc.frequency.exponentialRampToValueAtTime(30, c.currentTime + 0.5);
 
@@ -133,7 +140,7 @@ export function playBassDrop(): void {
   const curve = new Float32Array(256);
   for (let i = 0; i < 256; i++) {
     const x = (i * 2) / 256 - 1;
-    curve[i] = (Math.PI + 200) * x / (Math.PI + 200 * Math.abs(x));
+    curve[i] = ((Math.PI + 200) * x) / (Math.PI + 200 * Math.abs(x));
   }
   distortion.curve = curve;
 

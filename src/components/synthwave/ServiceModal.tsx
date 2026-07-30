@@ -1,23 +1,23 @@
-import { useEffect } from 'react'
-import type { ServiceNode } from '../../lib/synthwave-data'
-import { STATUS_COLOR, CATEGORY_COLOR } from '../../lib/synthwave-data'
+import { useEffect } from "react";
+import type { ServiceNode } from "../../lib/synthwave-data";
+import { STATUS_COLOR, CATEGORY_COLOR } from "../../lib/synthwave-data";
 
 interface ServiceModalProps {
-  service: ServiceNode
-  onClose: () => void
+  service: ServiceNode;
+  onClose: () => void;
 }
 
 export function ServiceModal({ service, onClose }: ServiceModalProps) {
-  const accentColor = CATEGORY_COLOR[service.category]
+  const accentColor = CATEGORY_COLOR[service.category];
 
   // Close on Escape
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose()
+      if (e.key === "Escape") onClose();
     }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
 
   return (
     <div
@@ -28,18 +28,29 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
       aria-label={`${service.name} details`}
     >
       <div className="sw-modal" style={{ borderColor: `${accentColor}66` }}>
-        <div className="sw-modal-header" style={{ borderBottomColor: `${accentColor}33` }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <span style={{ fontSize: '1.2rem' }}>{service.icon}</span>
-            <span className="sw-modal-title" style={{ color: accentColor, textShadow: `0 0 8px ${accentColor}` }}>
+        <div
+          className="sw-modal-header"
+          style={{ borderBottomColor: `${accentColor}33` }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+            <span style={{ fontSize: "1.2rem" }}>{service.icon}</span>
+            <span
+              className="sw-modal-title"
+              style={{
+                color: accentColor,
+                textShadow: `0 0 8px ${accentColor}`,
+              }}
+            >
               {service.name.toUpperCase()}
             </span>
             <span
               style={{
-                width: 8, height: 8, borderRadius: '50%',
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
                 background: STATUS_COLOR[service.status],
                 boxShadow: `0 0 6px ${STATUS_COLOR[service.status]}`,
-                display: 'inline-block',
+                display: "inline-block",
               }}
             />
           </div>
@@ -53,17 +64,27 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
         </div>
 
         <div className="sw-modal-body">
-          <p style={{
-            fontFamily: 'var(--font-mono)', fontSize: '0.75rem',
-            color: 'rgba(255,255,255,0.5)', marginBottom: '0.5rem',
-            letterSpacing: '0.06em',
-          }}>
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.75rem",
+              color: "rgba(255,255,255,0.5)",
+              marginBottom: "0.5rem",
+              letterSpacing: "0.06em",
+            }}
+          >
             {service.description}
           </p>
 
           <div className="sw-detail-row">
             <span className="sw-detail-key">STATUS</span>
-            <span className="sw-detail-value" style={{ color: STATUS_COLOR[service.status], textTransform: 'uppercase' }}>
+            <span
+              className="sw-detail-value"
+              style={{
+                color: STATUS_COLOR[service.status],
+                textTransform: "uppercase",
+              }}
+            >
               {service.status}
             </span>
           </div>
@@ -97,19 +118,21 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                marginTop: '0.5rem',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.7rem',
+                marginTop: "0.5rem",
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.7rem",
                 color: accentColor,
-                textDecoration: 'none',
+                textDecoration: "none",
                 border: `1px solid ${accentColor}44`,
-                padding: '0.3rem 0.6rem',
-                display: 'inline-block',
-                letterSpacing: '0.1em',
-                transition: 'box-shadow 0.2s',
+                padding: "0.3rem 0.6rem",
+                display: "inline-block",
+                letterSpacing: "0.1em",
+                transition: "box-shadow 0.2s",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.boxShadow = `0 0 10px ${accentColor}66`)}
-              onMouseLeave={(e) => (e.currentTarget.style.boxShadow = 'none')}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.boxShadow = `0 0 10px ${accentColor}66`)
+              }
+              onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
             >
               → OPEN DASHBOARD
             </a>
@@ -117,5 +140,5 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

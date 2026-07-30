@@ -14,6 +14,8 @@ RUN npm run build
 # ── Stage 2: Serve ────────────────────────────────────────────────────────────
 FROM nginx:alpine AS server
 
+ENV NODE_ENV=production
+
 # Remove default nginx config
 RUN rm /etc/nginx/conf.d/default.conf
 
@@ -22,6 +24,9 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy built static files from builder stage
 COPY --from=builder /app/build /usr/share/nginx/html
+
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 --start-period=10s \
+	CMD wget -q -O /dev/null http://127.0.0.1/ || exit 1
 
 EXPOSE 80
 

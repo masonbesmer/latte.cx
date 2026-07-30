@@ -1,91 +1,89 @@
-import { useState } from 'react'
+import { useState } from "react";
 
 interface TronProject {
-  id: string
-  title: string
-  description: string
-  tags: string[]
-  tagColor: string
+  id: string;
+  title: string;
+  description: string;
+  tags: string[];
+  tagColor: string;
 }
 
 const tronProjects: TronProject[] = [
   {
-    id: 'neural-home-hub',
-    title: 'NEURAL HOME HUB',
+    id: "neural-home-hub",
+    title: "NEURAL HOME HUB",
     description:
-      'Full-stack home automation node with 200+ integrated sensors, voice control, and presence detection across 12 zones.',
-    tags: ['HOME-ASSISTANT', 'NETWORKING'],
-    tagColor: '#00AAFF',
+      "Full-stack home automation node with 200+ integrated sensors, voice control, and presence detection across 12 zones.",
+    tags: ["HOME-ASSISTANT", "NETWORKING"],
+    tagColor: "#00AAFF",
   },
   {
-    id: 'proxmox-hypervisor-cluster',
-    title: 'PROXMOX HYPERVISOR CLUSTER',
+    id: "proxmox-hypervisor-cluster",
+    title: "PROXMOX HYPERVISOR CLUSTER",
     description:
-      'High-availability 3-node Proxmox cluster with Ceph storage and automated backup pipelines for 20+ VMs.',
-    tags: ['PROXMOX', 'LINUX'],
-    tagColor: '#FFCC00',
+      "High-availability 3-node Proxmox cluster with Ceph storage and automated backup pipelines for 20+ VMs.",
+    tags: ["PROXMOX", "LINUX"],
+    tagColor: "#FFCC00",
   },
   {
-    id: 'darknet-infrastructure',
-    title: 'DARKNET INFRASTRUCTURE',
+    id: "darknet-infrastructure",
+    title: "DARKNET INFRASTRUCTURE",
     description:
-      'Zero-trust VLAN-segmented network with pfSense firewall, IDS/IPS, and WireGuard mesh VPN across 8 nodes.',
-    tags: ['NETWORKING', 'LINUX'],
-    tagColor: '#00AAFF',
+      "Zero-trust VLAN-segmented network with pfSense firewall, IDS/IPS, and WireGuard mesh VPN across 8 nodes.",
+    tags: ["NETWORKING", "LINUX"],
+    tagColor: "#00AAFF",
   },
   {
-    id: 'vehicle-can-bus-logger',
-    title: 'VEHICLE CAN BUS LOGGER',
+    id: "vehicle-can-bus-logger",
+    title: "VEHICLE CAN BUS LOGGER",
     description:
-      'Custom OBD-II CAN bus sniffer with real-time telemetry dashboard and anomaly detection for automotive diagnostics.',
-    tags: ['AUTOMOTIVE', 'HARDWARE'],
-    tagColor: '#FF2200',
+      "Custom OBD-II CAN bus sniffer with real-time telemetry dashboard and anomaly detection for automotive diagnostics.",
+    tags: ["AUTOMOTIVE", "HARDWARE"],
+    tagColor: "#FF2200",
   },
   {
-    id: 'custom-pcb-sensor-array',
-    title: 'CUSTOM PCB SENSOR ARRAY',
+    id: "custom-pcb-sensor-array",
+    title: "CUSTOM PCB SENSOR ARRAY",
     description:
-      'PCB-designed environmental sensor module with ESP32, BME680, and wireless MQTT reporting to the home grid.',
-    tags: ['HARDWARE', 'HOME-ASSISTANT'],
-    tagColor: '#00AAFF',
+      "PCB-designed environmental sensor module with ESP32, BME680, and wireless MQTT reporting to the home grid.",
+    tags: ["HARDWARE", "HOME-ASSISTANT"],
+    tagColor: "#00AAFF",
   },
   {
-    id: 'linux-kernel-hardening',
-    title: 'LINUX KERNEL HARDENING',
+    id: "linux-kernel-hardening",
+    title: "LINUX KERNEL HARDENING",
     description:
-      'Custom kernel builds with grsecurity patches, seccomp profiles, and eBPF-based observability for hardened systems.',
-    tags: ['LINUX', 'NETWORKING'],
-    tagColor: '#00AAFF',
+      "Custom kernel builds with grsecurity patches, seccomp profiles, and eBPF-based observability for hardened systems.",
+    tags: ["LINUX", "NETWORKING"],
+    tagColor: "#00AAFF",
   },
-]
+];
 
 function TronProjectCard({ project }: { project: TronProject }) {
-  const [hovered, setHovered] = useState(false)
+  const [hovered, setHovered] = useState(false);
 
   return (
     <div
-      className={`tron-card${hovered ? ' tron-card--hovered' : ''}`}
+      className={`tron-card${hovered ? " tron-card--hovered" : ""}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       role="article"
     >
-      {hovered && (
-        <div className="tron-card-glow-trail" aria-hidden="true" />
-      )}
+      {hovered && <div className="tron-card-glow-trail" aria-hidden="true" />}
       <div className="tron-card-header">
         <span className="tron-card-id">// {project.id.toUpperCase()}</span>
       </div>
       <h3 className="tron-card-title">{project.title}</h3>
       <p className="tron-card-desc">{project.description}</p>
       <div className="tron-card-tags">
-        {project.tags.map(tag => (
+        {project.tags.map((tag) => (
           <span
             key={tag}
             className="tron-tag"
             style={{
               color: project.tagColor,
               borderColor: project.tagColor,
-              boxShadow: hovered ? `0 0 8px ${project.tagColor}55` : 'none',
+              boxShadow: hovered ? `0 0 8px ${project.tagColor}55` : "none",
             }}
           >
             [{tag}]
@@ -163,19 +161,23 @@ function TronProjectCard({ project }: { project: TronProject }) {
         }
       `}</style>
     </div>
-  )
+  );
 }
 
 export function TronProjects() {
   return (
-    <section id="projects" className="tron-projects" aria-label="Projects section">
+    <section
+      id="projects"
+      className="tron-projects"
+      aria-label="Projects section"
+    >
       <div className="tron-projects-inner">
         <div className="tron-section-header">
           <span className="tron-section-tag">// DATA BLOCKS ON THE GRID</span>
           <h2 className="tron-section-title">ACTIVE_PROGRAMS.LOG</h2>
         </div>
         <div className="tron-projects-grid">
-          {tronProjects.map(p => (
+          {tronProjects.map((p) => (
             <TronProjectCard key={p.id} project={p} />
           ))}
         </div>
@@ -205,5 +207,5 @@ export function TronProjects() {
         }
       `}</style>
     </section>
-  )
+  );
 }

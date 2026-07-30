@@ -1,9 +1,9 @@
 ---
 title: NEURAL HOME HUB
 slug: neural-home-hub
-tags: ['home-assistant', 'networking']
+tags: ["home-assistant", "networking"]
 category: home-assistant
-date: '2024-11-15'
+date: "2024-11-15"
 summary: Full-stack home automation node with 200+ integrated sensors, voice control, and presence detection.
 ---
 
@@ -68,11 +68,11 @@ Local voice processing pipeline using Whisper for STT and Piper for TTS — zero
 
 ## Results
 
-| Metric | Value |
-|--------|-------|
-| Automation rules | 247 |
-| Average response latency | 180ms |
-| Uptime (30 days) | 99.97% |
-| Power monitoring accuracy | ±2W |
+| Metric                    | Value  |
+| ------------------------- | ------ |
+| Automation rules          | 247    |
+| Average response latency  | 180ms  |
+| Uptime (30 days)          | 99.97% |
+| Power monitoring accuracy | ±2W    |
 
 The system has been running in production for 14 months with only one unplanned outage (upstream network issue, 4 hours).

@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint src vite.config.ts tailwind.config.ts verify.js eslint.config.mjs --max-warnings=0",
+    "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
@@ -21,14 +23,20 @@
     "three": "^0.177.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@tailwindcss/vite": "^4.1.7",
     "@tanstack/router-plugin": "^1.130.0",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
     "@types/three": "^0.177.0",
     "@vitejs/plugin-react": "^4.5.2",
+    "eslint": "^10.2.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.5.0",
     "tailwindcss": "^4.1.7",
     "typescript": "^5.8.3",
+    "typescript-eslint": "^8.58.2",
     "vite": "^6.3.5"
   }
 }

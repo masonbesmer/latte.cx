@@ -1,0 +1,26 @@
+services:
+  latte-cx:
+    image: ghcr.io/masonbesmer/latte.cx:dev
+    pull_policy: always
+    container_name: latte.cx-dev
+    ports:
+      - "8081:80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.latte-cx-dev.rule=Host(`dev.latte.cx`)"
+      - "traefik.http.routers.latte-cx-dev.entrypoints=https"
+      - "traefik.http.routers.latte-cx-dev.tls=true"
+      - "traefik.http.services.latte-cx-dev.loadbalancer.server.port=80"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true

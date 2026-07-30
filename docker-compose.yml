@@ -1,7 +1,0 @@
-services:
-  songbird-portfolio:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: songbird-portfolio
-    restart: unless-stopped
