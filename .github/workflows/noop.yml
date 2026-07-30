@@ -1,0 +1,10 @@
+name: Noop
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Placeholder workflow so CodeQL's Actions scan has something to analyze. Real build/deploy now runs through Komodo."
