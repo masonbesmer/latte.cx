@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as FalloutRouteImport } from "./routes/fallout";
+import { Route as DestinyRouteImport } from "./routes/destiny";
 import { Route as TronRouteRouteImport } from "./routes/tron/route";
 import { Route as SynthwaveRouteRouteImport } from "./routes/synthwave/route";
 import { Route as CyberpunkRouteRouteImport } from "./routes/cyberpunk/route";
@@ -24,6 +25,11 @@ import { Route as CyberpunkProjectsSlugRouteImport } from "./routes/cyberpunk/pr
 const FalloutRoute = FalloutRouteImport.update({
   id: "/fallout",
   path: "/fallout",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const DestinyRoute = DestinyRouteImport.update({
+  id: "/destiny",
+  path: "/destiny",
   getParentRoute: () => rootRouteImport,
 } as any);
 const TronRouteRoute = TronRouteRouteImport.update({
@@ -83,6 +89,7 @@ export interface FileRoutesByFullPath {
   "/synthwave": typeof SynthwaveRouteRouteWithChildren;
   "/tron": typeof TronRouteRouteWithChildren;
   "/fallout": typeof FalloutRoute;
+  "/destiny": typeof DestinyRoute;
   "/cyberpunk/": typeof CyberpunkIndexRoute;
   "/synthwave/": typeof SynthwaveIndexRoute;
   "/tron/": typeof TronIndexRoute;
@@ -93,6 +100,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
   "/fallout": typeof FalloutRoute;
+  "/destiny": typeof DestinyRoute;
   "/cyberpunk": typeof CyberpunkIndexRoute;
   "/synthwave": typeof SynthwaveIndexRoute;
   "/tron": typeof TronIndexRoute;
@@ -107,6 +115,7 @@ export interface FileRoutesById {
   "/synthwave": typeof SynthwaveRouteRouteWithChildren;
   "/tron": typeof TronRouteRouteWithChildren;
   "/fallout": typeof FalloutRoute;
+  "/destiny": typeof DestinyRoute;
   "/cyberpunk/": typeof CyberpunkIndexRoute;
   "/synthwave/": typeof SynthwaveIndexRoute;
   "/tron/": typeof TronIndexRoute;
@@ -122,6 +131,7 @@ export interface FileRouteTypes {
     | "/synthwave"
     | "/tron"
     | "/fallout"
+    | "/destiny"
     | "/cyberpunk/"
     | "/synthwave/"
     | "/tron/"
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
   to:
     | "/"
     | "/fallout"
+    | "/destiny"
     | "/cyberpunk"
     | "/synthwave"
     | "/tron"
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | "/synthwave"
     | "/tron"
     | "/fallout"
+    | "/destiny"
     | "/cyberpunk/"
     | "/synthwave/"
     | "/tron/"
@@ -159,6 +171,7 @@ export interface RootRouteChildren {
   SynthwaveRouteRoute: typeof SynthwaveRouteRouteWithChildren;
   TronRouteRoute: typeof TronRouteRouteWithChildren;
   FalloutRoute: typeof FalloutRoute;
+  DestinyRoute: typeof DestinyRoute;
   VinylIndexRoute: typeof VinylIndexRoute;
 }
 
@@ -169,6 +182,13 @@ declare module "@tanstack/react-router" {
       path: "/fallout";
       fullPath: "/fallout";
       preLoaderRoute: typeof FalloutRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/destiny": {
+      id: "/destiny";
+      path: "/destiny";
+      fullPath: "/destiny";
+      preLoaderRoute: typeof DestinyRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     "/tron": {
@@ -290,6 +310,7 @@ const rootRouteChildren: RootRouteChildren = {
   SynthwaveRouteRoute: SynthwaveRouteRouteWithChildren,
   TronRouteRoute: TronRouteRouteWithChildren,
   FalloutRoute: FalloutRoute,
+  DestinyRoute: DestinyRoute,
   VinylIndexRoute: VinylIndexRoute,
 };
 export const routeTree = rootRouteImport
