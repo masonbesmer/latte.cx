@@ -4,7 +4,7 @@ services:
     pull_policy: always
     container_name: latte.cx
     ports:
-      - "8080:80"
+      - "8180:80"
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/ || exit 1"]
